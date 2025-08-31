@@ -3,10 +3,12 @@ using CleanArchitecture.Application.Common.Interfaces;
 using CleanArchitecture.Infrastructure.Data;
 using CleanArchitecture.Web.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.OpenApi.Models; // Добавь это
 
 #if (UseApiOnly)
-using NSwag;
-using NSwag.Generation.Processors.Security;
+using System.Text; // Для JWT
+using Microsoft.IdentityModel.Tokens; // Для JWT
 #endif
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -26,7 +28,8 @@ public static class DependencyInjection
 
         services.AddExceptionHandler<CustomExceptionHandler>();
 
-        services.AddRazorPages();
+        // Убери AddRazorPages() — тебе не нужно
+        // services.AddRazorPages();
 
         // Customise default API behaviour
         services.Configure<ApiBehaviorOptions>(options =>
@@ -34,21 +37,35 @@ public static class DependencyInjection
 
         services.AddEndpointsApiExplorer();
 
-        services.AddOpenApiDocument((configure, sp) =>
+        // 🔥 Замени AddOpenApiDocument на AddSwaggerGen
+        services.AddSwaggerGen(options =>
         {
-            configure.Title = "CleanArchitecture API";
+            options.SwaggerDoc("v1", new OpenApiInfo { Title = "SchoolRowingApp API", Version = "v1" });
 
 #if (UseApiOnly)
-            // Add JWT
-            configure.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme
+            // Добавляем JWT Bearer авторизацию
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
-                Type = OpenApiSecuritySchemeType.ApiKey,
+                In = ParameterLocation.Header,
+                Description = "Please enter token: Bearer {token}",
                 Name = "Authorization",
-                In = OpenApiSecurityApiKeyLocation.Header,
-                Description = "Type into the textbox: Bearer {your JWT token}."
+                Type = SecuritySchemeType.ApiKey
             });
 
-            configure.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
 #endif
         });
 

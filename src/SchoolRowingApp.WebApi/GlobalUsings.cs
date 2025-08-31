@@ -3,6 +3,8 @@ global using System.Threading.Tasks;
 global using System.Linq;
 global using System.Collections.Generic;
 global using System.Threading;
+global using Microsoft.AspNetCore.Builder;
+global using Microsoft.AspNetCore.Routing;
 global using Ardalis.GuardClauses;
 global using CleanArchitecture.Web.Infrastructure;
 global using MediatR;
