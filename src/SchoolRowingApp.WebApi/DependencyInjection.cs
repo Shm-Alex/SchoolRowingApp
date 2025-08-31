@@ -1,5 +1,6 @@
 ﻿using Azure.Identity;
 using SchoolRowingApp.Application.Common.Interfaces;
+
 using SchoolRowingApp.Infrastructure.Data;
 using SchoolRowingApp.Web.Services;
 using Microsoft.AspNetCore.Mvc;
