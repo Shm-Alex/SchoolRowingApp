@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CleanArchitecture.Domain.Entities;
+namespace SchoolRowingApp.Domain.Entities;
 
 public class TodoList : BaseAuditableEntity
 {

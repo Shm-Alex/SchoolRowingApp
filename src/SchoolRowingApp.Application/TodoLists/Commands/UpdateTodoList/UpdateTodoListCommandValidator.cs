@@ -1,6 +1,6 @@
-﻿using CleanArchitecture.Application.Common.Interfaces;
+﻿using SchoolRowingApp.Application.Common.Interfaces;
 
-namespace CleanArchitecture.Application.TodoLists.Commands.UpdateTodoList;
+namespace SchoolRowingApp.Application.TodoLists.Commands.UpdateTodoList;
 
 public class UpdateTodoListCommandValidator : AbstractValidator<UpdateTodoListCommand>
 {

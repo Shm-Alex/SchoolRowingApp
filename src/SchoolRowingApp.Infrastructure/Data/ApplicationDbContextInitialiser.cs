@@ -1,14 +1,14 @@
 ﻿using System.Runtime.InteropServices;
-using CleanArchitecture.Domain.Constants;
-using CleanArchitecture.Domain.Entities;
-using CleanArchitecture.Infrastructure.Identity;
+using SchoolRowingApp.Domain.Constants;
+using SchoolRowingApp.Domain.Entities;
+using SchoolRowingApp.Infrastructure.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace CleanArchitecture.Infrastructure.Data;
+namespace SchoolRowingApp.Infrastructure.Data;
 
 public static class InitialiserExtensions
 {

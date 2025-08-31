@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Application.Common.Models;
+﻿namespace SchoolRowingApp.Application.Common.Models;
 
 public class PaginatedList<T>
 {

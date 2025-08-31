@@ -6,5 +6,5 @@ global using System.Threading;
 global using Microsoft.AspNetCore.Builder;
 global using Microsoft.AspNetCore.Routing;
 global using Ardalis.GuardClauses;
-global using CleanArchitecture.Web.Infrastructure;
+global using SchoolRowingApp.Web.Infrastructure;
 global using MediatR;

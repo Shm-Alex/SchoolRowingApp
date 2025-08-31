@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CleanArchitecture.Domain.Entities;
+namespace SchoolRowingApp.Domain.Entities;
 
 public class TodoItem : BaseAuditableEntity
 {

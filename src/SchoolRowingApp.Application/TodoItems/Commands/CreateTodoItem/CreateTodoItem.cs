@@ -1,8 +1,8 @@
-﻿using CleanArchitecture.Application.Common.Interfaces;
-using CleanArchitecture.Domain.Entities;
-using CleanArchitecture.Domain.Events;
+﻿using SchoolRowingApp.Application.Common.Interfaces;
+using SchoolRowingApp.Domain.Entities;
+using SchoolRowingApp.Domain.Events;
 
-namespace CleanArchitecture.Application.TodoItems.Commands.CreateTodoItem;
+namespace SchoolRowingApp.Application.TodoItems.Commands.CreateTodoItem;
 
 public record CreateTodoItemCommand : IRequest<int>
 {

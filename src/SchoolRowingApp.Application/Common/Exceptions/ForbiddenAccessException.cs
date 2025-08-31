@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CleanArchitecture.Application.Common.Exceptions;
+namespace SchoolRowingApp.Application.Common.Exceptions;
 
 public class ForbiddenAccessException : Exception
 {

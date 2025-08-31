@@ -1,9 +1,9 @@
-﻿using CleanArchitecture.Application.Common.Interfaces;
-using CleanArchitecture.Application.Common.Models;
-using CleanArchitecture.Application.Common.Security;
-using CleanArchitecture.Domain.Enums;
+﻿using SchoolRowingApp.Application.Common.Interfaces;
+using SchoolRowingApp.Application.Common.Models;
+using SchoolRowingApp.Application.Common.Security;
+using SchoolRowingApp.Domain.Enums;
 
-namespace CleanArchitecture.Application.TodoLists.Queries.GetTodos;
+namespace SchoolRowingApp.Application.TodoLists.Queries.GetTodos;
 
 [Authorize]
 public record GetTodosQuery : IRequest<TodosVm>;

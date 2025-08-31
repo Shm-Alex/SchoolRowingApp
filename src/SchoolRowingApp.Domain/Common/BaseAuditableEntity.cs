@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CleanArchitecture.Domain.Common;
+namespace SchoolRowingApp.Domain.Common;
 
 public abstract class BaseAuditableEntity : BaseEntity
 {

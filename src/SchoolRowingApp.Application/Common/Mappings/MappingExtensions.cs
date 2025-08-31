@@ -1,6 +1,6 @@
-﻿using CleanArchitecture.Application.Common.Models;
+﻿using SchoolRowingApp.Application.Common.Models;
 
-namespace CleanArchitecture.Application.Common.Mappings;
+namespace SchoolRowingApp.Application.Common.Mappings;
 
 public static class MappingExtensions
 {

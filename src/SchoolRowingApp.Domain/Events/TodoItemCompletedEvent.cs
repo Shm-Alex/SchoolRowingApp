@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Domain.Events;
+﻿namespace SchoolRowingApp.Domain.Events;
 
 public class TodoItemCompletedEvent : BaseEvent
 {

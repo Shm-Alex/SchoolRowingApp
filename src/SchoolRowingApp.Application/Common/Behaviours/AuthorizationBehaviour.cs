@@ -3,11 +3,11 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using CleanArchitecture.Application.Common.Exceptions;
-using CleanArchitecture.Application.Common.Interfaces;
-using CleanArchitecture.Application.Common.Security;
+using SchoolRowingApp.Application.Common.Exceptions;
+using SchoolRowingApp.Application.Common.Interfaces;
+using SchoolRowingApp.Application.Common.Security;
 
-namespace CleanArchitecture.Application.Common.Behaviours;
+namespace SchoolRowingApp.Application.Common.Behaviours;
 
 public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
 {

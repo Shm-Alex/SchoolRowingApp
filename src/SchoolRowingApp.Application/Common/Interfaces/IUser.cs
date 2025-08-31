@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Application.Common.Interfaces;
+﻿namespace SchoolRowingApp.Application.Common.Interfaces;
 
 public interface IUser
 {

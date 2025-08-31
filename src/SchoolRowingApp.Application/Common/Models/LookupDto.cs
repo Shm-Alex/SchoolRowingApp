@@ -1,7 +1,7 @@
-﻿using CleanArchitecture.Domain.Entities;
+﻿using SchoolRowingApp.Domain.Entities;
 
 
-namespace CleanArchitecture.Application.Common.Models;
+namespace SchoolRowingApp.Application.Common.Models;
 
 public class LookupDto
 {

@@ -1,7 +1,7 @@
 ﻿using Azure.Identity;
-using CleanArchitecture.Application.Common.Interfaces;
-using CleanArchitecture.Infrastructure.Data;
-using CleanArchitecture.Web.Services;
+using SchoolRowingApp.Application.Common.Interfaces;
+using SchoolRowingApp.Infrastructure.Data;
+using SchoolRowingApp.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models; // Добавь это

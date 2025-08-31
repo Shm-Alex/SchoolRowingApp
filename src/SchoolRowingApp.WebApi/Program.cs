@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Infrastructure.Data;
+﻿using SchoolRowingApp.Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

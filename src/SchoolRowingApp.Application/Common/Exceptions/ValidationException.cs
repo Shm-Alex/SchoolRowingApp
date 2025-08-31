@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CleanArchitecture.Application.Common.Exceptions;
+namespace SchoolRowingApp.Application.Common.Exceptions;
 
 public class ValidationException : Exception
 {

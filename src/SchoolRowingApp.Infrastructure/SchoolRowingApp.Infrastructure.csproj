@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <RootNamespace>CleanArchitecture.Infrastructure</RootNamespace>
-    <AssemblyName>CleanArchitecture.Infrastructure</AssemblyName>
+    <RootNamespace>SchoolRowingApp.Infrastructure</RootNamespace>
+    <AssemblyName>SchoolRowingApp.Infrastructure</AssemblyName>
   </PropertyGroup>
 
   <!--#if ('True' == 'False')-->

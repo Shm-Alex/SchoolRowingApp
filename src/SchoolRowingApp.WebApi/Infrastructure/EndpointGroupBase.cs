@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 
-namespace CleanArchitecture.Web.Infrastructure;
+namespace SchoolRowingApp.Web.Infrastructure;
 
 public abstract class EndpointGroupBase
 {

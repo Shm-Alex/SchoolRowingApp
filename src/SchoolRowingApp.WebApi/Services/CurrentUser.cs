@@ -1,9 +1,9 @@
 ﻿using System.Security.Claims;
 
-using CleanArchitecture.Application.Common.Interfaces;
+using SchoolRowingApp.Application.Common.Interfaces;
 using Microsoft.AspNetCore.Http;
 
-namespace CleanArchitecture.Web.Services;
+namespace SchoolRowingApp.Web.Services;
 
 public class CurrentUser : IUser
 {

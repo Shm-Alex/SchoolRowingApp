@@ -1,6 +1,6 @@
-﻿using CleanArchitecture.Application.Common.Models;
+﻿using SchoolRowingApp.Application.Common.Models;
 
-namespace CleanArchitecture.Application.TodoLists.Queries.GetTodos;
+namespace SchoolRowingApp.Application.TodoLists.Queries.GetTodos;
 
 public class TodosVm
 {

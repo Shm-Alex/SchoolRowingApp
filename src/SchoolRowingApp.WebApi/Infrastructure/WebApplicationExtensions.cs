@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using System.Reflection;
 
-namespace CleanArchitecture.Web.Infrastructure;
+namespace SchoolRowingApp.Web.Infrastructure;
 
 public static class WebApplicationExtensions
 {

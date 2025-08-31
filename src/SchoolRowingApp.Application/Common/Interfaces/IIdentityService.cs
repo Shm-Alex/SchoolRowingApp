@@ -1,7 +1,7 @@
-﻿using CleanArchitecture.Application.Common.Models;
+﻿using SchoolRowingApp.Application.Common.Models;
 using System.Threading.Tasks;
 
-namespace CleanArchitecture.Application.Common.Interfaces;
+namespace SchoolRowingApp.Application.Common.Interfaces;
 
 public interface IIdentityService
 {

@@ -1,8 +1,8 @@
-﻿using CleanArchitecture.Domain.Entities;
+﻿using SchoolRowingApp.Domain.Entities;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CleanArchitecture.Application.Common.Interfaces;
+namespace SchoolRowingApp.Application.Common.Interfaces;
 
 public interface IApplicationDbContext
 {
