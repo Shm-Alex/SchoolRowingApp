@@ -2,37 +2,45 @@
 
 namespace CleanArchitecture.Web.Infrastructure;
 
-public static class EndpointRouteBuilderExtensions
+public static class IEndpointRouteBuilderExtensions
 {
-    public static RouteHandlerBuilder MapGet(this IEndpointRouteBuilder builder, Delegate handler, [StringSyntax("Route")] string pattern = "")
+    public static IEndpointRouteBuilder MapGet(this IEndpointRouteBuilder builder, Delegate handler, [StringSyntax("Route")] string pattern = "")
     {
         Guard.Against.AnonymousMethod(handler);
 
-        return builder.MapGet(pattern, handler)
-              .WithName(handler.Method.Name);
+        builder.MapGet(pattern, handler)
+            .WithName(handler.Method.Name);
+
+        return builder;
     }
 
-    public static RouteHandlerBuilder MapPost(this IEndpointRouteBuilder builder, Delegate handler, [StringSyntax("Route")] string pattern = "")
+    public static IEndpointRouteBuilder MapPost(this IEndpointRouteBuilder builder, Delegate handler, [StringSyntax("Route")] string pattern = "")
     {
         Guard.Against.AnonymousMethod(handler);
 
-        return builder.MapPost(pattern, handler)
+        builder.MapPost(pattern, handler)
             .WithName(handler.Method.Name);
+
+        return builder;
     }
 
-    public static RouteHandlerBuilder MapPut(this IEndpointRouteBuilder builder, Delegate handler, [StringSyntax("Route")] string pattern)
+    public static IEndpointRouteBuilder MapPut(this IEndpointRouteBuilder builder, Delegate handler, [StringSyntax("Route")] string pattern)
     {
         Guard.Against.AnonymousMethod(handler);
 
-        return builder.MapPut(pattern, handler)
+        builder.MapPut(pattern, handler)
             .WithName(handler.Method.Name);
+
+        return builder;
     }
 
-    public static RouteHandlerBuilder MapDelete(this IEndpointRouteBuilder builder, Delegate handler, [StringSyntax("Route")] string pattern)
+    public static IEndpointRouteBuilder MapDelete(this IEndpointRouteBuilder builder, Delegate handler, [StringSyntax("Route")] string pattern)
     {
         Guard.Against.AnonymousMethod(handler);
 
-        return builder.MapDelete(pattern, handler)
+        builder.MapDelete(pattern, handler)
             .WithName(handler.Method.Name);
+
+        return builder;
     }
 }

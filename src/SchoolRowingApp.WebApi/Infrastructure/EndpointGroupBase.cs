@@ -1,7 +1,8 @@
-﻿namespace CleanArchitecture.Web.Infrastructure;
+﻿using Microsoft.AspNetCore.Builder;
+
+namespace CleanArchitecture.Web.Infrastructure;
 
 public abstract class EndpointGroupBase
 {
-    public virtual string? GroupName { get; }
-    public abstract void Map(RouteGroupBuilder groupBuilder);
+    public abstract void Map(WebApplication app);
 }

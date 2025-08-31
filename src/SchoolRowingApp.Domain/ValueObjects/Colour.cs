@@ -1,4 +1,7 @@
-﻿namespace CleanArchitecture.Domain.ValueObjects;
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace CleanArchitecture.Domain.ValueObjects;
 
 public class Colour(string code) : ValueObject
 {

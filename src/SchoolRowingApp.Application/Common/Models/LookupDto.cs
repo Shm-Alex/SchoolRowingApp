@@ -1,5 +1,6 @@
 ﻿using CleanArchitecture.Domain.Entities;
 
+
 namespace CleanArchitecture.Application.Common.Models;
 
 public class LookupDto

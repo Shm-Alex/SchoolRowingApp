@@ -13,31 +13,28 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class DependencyInjection
 {
-    public static void AddWebServices(this IHostApplicationBuilder builder)
+    public static IServiceCollection AddWebServices(this IServiceCollection services)
     {
-        builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+        services.AddDatabaseDeveloperPageExceptionFilter();
 
-        builder.Services.AddScoped<IUser, CurrentUser>();
+        services.AddScoped<IUser, CurrentUser>();
 
-        builder.Services.AddHttpContextAccessor();
-#if (!UseAspire)
-        builder.Services.AddHealthChecks()
+        services.AddHttpContextAccessor();
+
+        services.AddHealthChecks()
             .AddDbContextCheck<ApplicationDbContext>();
-#endif
 
-        builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+        services.AddExceptionHandler<CustomExceptionHandler>();
 
-#if (!UseApiOnly)
-        builder.Services.AddRazorPages();
-#endif
+        services.AddRazorPages();
 
         // Customise default API behaviour
-        builder.Services.Configure<ApiBehaviorOptions>(options =>
+        services.Configure<ApiBehaviorOptions>(options =>
             options.SuppressModelStateInvalidFilter = true);
 
-        builder.Services.AddEndpointsApiExplorer();
+        services.AddEndpointsApiExplorer();
 
-        builder.Services.AddOpenApiDocument((configure, sp) =>
+        services.AddOpenApiDocument((configure, sp) =>
         {
             configure.Title = "CleanArchitecture API";
 
@@ -54,16 +51,20 @@ public static class DependencyInjection
             configure.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));
 #endif
         });
+
+        return services;
     }
 
-    public static void AddKeyVaultIfConfigured(this IHostApplicationBuilder builder)
+    public static IServiceCollection AddKeyVaultIfConfigured(this IServiceCollection services, ConfigurationManager configuration)
     {
-        var keyVaultUri = builder.Configuration["AZURE_KEY_VAULT_ENDPOINT"];
+        var keyVaultUri = configuration["AZURE_KEY_VAULT_ENDPOINT"];
         if (!string.IsNullOrWhiteSpace(keyVaultUri))
         {
-            builder.Configuration.AddAzureKeyVault(
+            configuration.AddAzureKeyVault(
                 new Uri(keyVaultUri),
                 new DefaultAzureCredential());
         }
+
+        return services;
     }
 }

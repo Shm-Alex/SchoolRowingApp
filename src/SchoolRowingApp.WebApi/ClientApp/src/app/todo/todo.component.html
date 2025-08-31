@@ -1,22 +1,23 @@
 <h1>Todo</h1>
 
 <p>This is a complex todo list component.</p>
-@if(!lists){
-<p><em>Loading...</em></p>
-}
-@else{
-<div>
+
+<p *ngIf="!lists"><em>Loading...</em></p>
+
+<div *ngIf="lists">
+
   <div class="row">
     <div class="col-sm-4">
       <div class="clearfix">
         <h2 class="float-start">Lists</h2>
-        <button class="btn btn-default float-end" title="New List..." (click)="showNewListModal(newListModalTemplate)">
+        <button class="btn btn-default float-end" title="New List..."
+          (click)="showNewListModal(newListModalTemplate)">
           <i class="bi bi-journal-plus"></i>
         </button>
       </div>
       <ul class="list-group">
-        @for (list of lists; track $index; let i = $index) {
-        <li class="list-group-item" [ngClass]="{ 'active': selectedList == list }" (click)="selectedList = list">
+        <li *ngFor="let list of lists; index as i" class="list-group-item"
+          [ngClass]="{ 'active': selectedList == list }" (click)="selectedList = list">
           <div class="clearfix">
             <div class="float-start">
               {{ list.title }}
@@ -26,11 +27,9 @@
             </div>
           </div>
         </li>
-        }
       </ul>
     </div>
-    @if (selectedList) {
-    <div class="col-sm-8">
+    <div class="col-sm-8" *ngIf="selectedList">
       <div class="clearfix">
         <h2 class="float-start">{{ selectedList.title }}</h2>
         <button id="listOptions" class="btn btn-default float-end" title="List Options..."
@@ -39,50 +38,39 @@
         </button>
       </div>
       <ul id="todo-items" class="list-group mb-2">
-        @for (item of selectedList.items; track $index;let i = $index) {
-        <li class="list-group-item">
+        <li class="list-group-item" *ngFor="let item of selectedList.items; index as i">
           <div class="d-flex">
             <div class="todo-item-checkbox">
               <input type="checkbox" [(ngModel)]="item.done" (change)="updateItem(item)" />
             </div>
             <div class="flex-fill">
-              @if(item == selectedItem){
-              <input id="{{ 'itemTitle' + i }}" type="text" class="form-control item-input-control"
-                [(ngModel)]="item.title" (keyup.enter)="updateItem(item, true)" (blur)="updateItem(item)"
-                autofocus="autofocus" maxlength="200" />
-              }
-              @else {
-              <div class="todo-item-title" [ngClass]="{ 'done-todo': item.done }"
+              <input id="{{ 'itemTitle' + i }}" *ngIf="item == selectedItem" type="text"
+                class="form-control item-input-control" [(ngModel)]="item.title" (keyup.enter)="updateItem(item, true)"
+                (blur)="updateItem(item)" autofocus="autofocus" maxlength="200" />
+              <div class="todo-item-title" *ngIf="item != selectedItem" [ngClass]="{ 'done-todo': item.done }"
                 (click)="editItem(item, 'itemTitle' + i)" class="form-control item-input-control">
                 <span>{{ item.title }}</span>
               </div>
-              }
             </div>
             <div class="todo-item-commands">
-              @if(item.id != 0){
-              <button (click)="showItemDetailsModal(itemDetailsModalTemplate, item)" class="btn btn-default btn-xs"
-                role="button">
+              <button *ngIf="item.id != 0" (click)="showItemDetailsModal(itemDetailsModalTemplate, item)"
+                class="btn btn-default btn-xs" role="button">
                 <i class="bi bi-three-dots-vertical"></i>
               </button>
-              }
             </div>
           </div>
         </li>
-        }
         <li class="list-group-item" (click)="addItem()">
           <button class="btn btn-default">Add Item...</button>
         </li>
       </ul>
     </div>
-    }
   </div>
 </div>
-}
-@if(debug){
-<div>
+
+<div *ngIf="debug">
   <pre>{{ lists | json }}</pre>
 </div>
-}
 
 <ng-template #listOptionsModalTemplate>
   <div class="modal-header">
@@ -97,11 +85,9 @@
       <input type="text" class="form-control" id="inputListTitle" placeholder="List name..."
         [(ngModel)]="listOptionsEditor.title" (keyup.enter)="updateListOptions()" maxlength="200" />
     </div>
-    @if(debug){
-    <div>
+    <div *ngIf="debug">
       <pre>{{ listOptionsEditor | json }}</pre>
     </div>
-    }
   </div>
   <div class="modal-footer">
     <div class="clearfix">
@@ -128,17 +114,13 @@
       <div class="form-group">
         <label for="list">List</label>
         <select class="form-control" [(ngModel)]="itemDetailsEditor.listId">
-          @for (list of lists; track $index) {
-          <option [ngValue]="list.id">{{ list.title }}</option>
-          }
+          <option [ngValue]="list.id" *ngFor="let list of lists">{{ list.title }}</option>
         </select>
       </div>
       <div class="form-group">
         <label for="priority">Priority</label>
         <select class="form-control" [(ngModel)]="itemDetailsEditor.priority">
-          @for (level of priorityLevels; track $index) {
-          <option [ngValue]="level.id">{{ level.title }}</option>
-          }
+          <option [ngValue]="level.id" *ngFor="let level of priorityLevels">{{ level.title }}</option>
         </select>
       </div>
       <div class="form-group">
@@ -146,12 +128,9 @@
         <textarea id="note" class="form-control" rows="3" [(ngModel)]="itemDetailsEditor.note"></textarea>
       </div>
     </div>
-
-    @if(debug){
-    <div>
+    <div *ngIf="debug">
       <pre>{{ itemDetailsEditor | json }}</pre>
     </div>
-    }
   </div>
   <div class="modal-footer">
     <div class="clearfix">
@@ -175,11 +154,9 @@
   </div>
   <div class="modal-body">
     <p>All items will be permanently deleted. </p>
-    @if(debug){
-    <div>
+    <div *ngIf="debug">
       <pre>{{ selectedList | json }}</pre>
     </div>
-    }
   </div>
   <div class="modal-footer clearfix">
     <div class="float-end">
@@ -201,17 +178,13 @@
       <label for="title">Title</label>
       <input type="text" class="form-control" id="title" placeholder="List title..." [(ngModel)]="newListEditor.title"
         [ngClass]="{ 'is-invalid': newListEditor.error }" (keyup.enter)="addList()" maxlength="200" />
-      @if(newListEditor.error){
-      <div class="invalid-feedback">
+      <div *ngIf="newListEditor.error" class="invalid-feedback">
         {{ newListEditor.error }}
       </div>
-      }
     </div>
-    @if (debug) {
-    <div>
+    <div *ngIf="debug">
       <pre>{{ newListEditor | json }}</pre>
     </div>
-    }
   </div>
   <div class="modal-footer clearfix">
     <div class="float-end">

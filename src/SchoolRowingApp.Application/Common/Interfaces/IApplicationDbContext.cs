@@ -1,4 +1,6 @@
 ﻿using CleanArchitecture.Domain.Entities;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CleanArchitecture.Application.Common.Interfaces;
 

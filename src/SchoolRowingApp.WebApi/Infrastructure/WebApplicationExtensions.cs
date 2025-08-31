@@ -4,14 +4,15 @@ namespace CleanArchitecture.Web.Infrastructure;
 
 public static class WebApplicationExtensions
 {
-    private static RouteGroupBuilder MapGroup(this WebApplication app, EndpointGroupBase group)
+    public static RouteGroupBuilder MapGroup(this WebApplication app, EndpointGroupBase group)
     {
-        var groupName = group.GroupName ?? group.GetType().Name;
+        var groupName = group.GetType().Name;
 
         return app
             .MapGroup($"/api/{groupName}")
             .WithGroupName(groupName)
-            .WithTags(groupName);
+            .WithTags(groupName)
+            .WithOpenApi();
     }
 
     public static WebApplication MapEndpoints(this WebApplication app)
@@ -27,7 +28,7 @@ public static class WebApplicationExtensions
         {
             if (Activator.CreateInstance(type) is EndpointGroupBase instance)
             {
-                instance.Map(app.MapGroup(instance));
+                instance.Map(app);
             }
         }
 

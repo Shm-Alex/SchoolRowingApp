@@ -1,9 +1,13 @@
-﻿using ValidationException = CleanArchitecture.Application.Common.Exceptions.ValidationException;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using ValidationException = CleanArchitecture.Application.Common.Exceptions.ValidationException;
 
 namespace CleanArchitecture.Application.Common.Behaviours;
 
 public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : notnull
+     where TRequest : notnull
 {
     private readonly IEnumerable<IValidator<TRequest>> _validators;
 
@@ -16,19 +20,20 @@ public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TReque
     {
         if (_validators.Any())
         {
+            var context = new ValidationContext<TRequest>(request);
+
             var validationResults = await Task.WhenAll(
                 _validators.Select(v =>
-                    v.ValidateAsync(new ValidationContext<TRequest>(request), cancellationToken)));
+                    v.ValidateAsync(context, cancellationToken)));
 
             var failures = validationResults
                 .Where(r => r.Errors.Any())
                 .SelectMany(r => r.Errors)
                 .ToList();
 
-            if (failures.Count != 0)
+            if (failures.Any())
                 throw new ValidationException(failures);
         }
-
         return await next();
     }
 }
