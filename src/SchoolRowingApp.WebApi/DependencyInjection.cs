@@ -25,7 +25,8 @@ public static class DependencyInjection
         services.AddHttpContextAccessor();
 
         services.AddHealthChecks()
-            .AddDbContextCheck<ApplicationDbContext>();
+            //.AddDbContextCheck<ApplicationDbContext>()
+            ;
 
         services.AddExceptionHandler<CustomExceptionHandler>();
 
@@ -73,16 +74,16 @@ public static class DependencyInjection
         return services;
     }
 
-    public static IServiceCollection AddKeyVaultIfConfigured(this IServiceCollection services, ConfigurationManager configuration)
-    {
-        var keyVaultUri = configuration["AZURE_KEY_VAULT_ENDPOINT"];
-        if (!string.IsNullOrWhiteSpace(keyVaultUri))
-        {
-            configuration.AddAzureKeyVault(
-                new Uri(keyVaultUri),
-                new DefaultAzureCredential());
-        }
+    //public static IServiceCollection AddKeyVaultIfConfigured(this IServiceCollection services, ConfigurationManager configuration)
+    //{
+    //    var keyVaultUri = configuration["AZURE_KEY_VAULT_ENDPOINT"];
+    //    if (!string.IsNullOrWhiteSpace(keyVaultUri))
+    //    {
+    //        configuration.AddAzureKeyVault(
+    //            new Uri(keyVaultUri),
+    //            new DefaultAzureCredential());
+    //    }
 
-        return services;
-    }
+    //    return services;
+    //}
 }
