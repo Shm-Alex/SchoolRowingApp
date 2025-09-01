@@ -4,10 +4,11 @@
     <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>SchoolRowingApp.Domain</RootNamespace>
     <AssemblyName>SchoolRowingApp.Domain</AssemblyName>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediatR"  />
+    <PackageReference Include="MediatR" />
   </ItemGroup>
 
 </Project>

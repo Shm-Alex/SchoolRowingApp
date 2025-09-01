@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>SchoolRowingApp.Application</RootNamespace>
     <AssemblyName>SchoolRowingApp.Application</AssemblyName>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

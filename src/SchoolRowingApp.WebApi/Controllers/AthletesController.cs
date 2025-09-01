@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using SchoolRowingApp.Application.Athletes.Dto; 
 using SchoolRowingApp.Application.Athletes.Queries.GetAthletes;
 
 namespace SchoolRowingApp.WebApi.Controllers;

@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>SchoolRowingApp.Infrastructure</RootNamespace>
     <AssemblyName>SchoolRowingApp.Infrastructure</AssemblyName>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <!--#if ('True' == 'False')-->
