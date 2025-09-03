@@ -28,7 +28,15 @@ public static class DependencyInjection
 #if (UseSQLite)
             options.UseSqlite(connectionString);
 #else
-            options.UseSqlServer(connectionString);
+            //options.UseSqlServer(connectionString);
+            options.UseNpgsql(
+                                connectionString,
+                                npgsqlOptions =>
+                                {
+                                    npgsqlOptions.EnableRetryOnFailure(); // Автоматические повторы при разрывах
+                                    npgsqlOptions.CommandTimeout(30);      // Таймаут 30 секунд
+                                }
+                              );
 #endif
         });
 
