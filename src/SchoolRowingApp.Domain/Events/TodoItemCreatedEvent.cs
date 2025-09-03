@@ -1,11 +1,11 @@
 ﻿namespace SchoolRowingApp.Domain.Events;
 
-public class TodoItemCreatedEvent : BaseEvent
-{
-    public TodoItemCreatedEvent(TodoItem item)
-    {
-        Item = item;
-    }
+//public class TodoItemCreatedEvent : BaseEvent
+//{
+//    public TodoItemCreatedEvent(TodoItem item)
+//    {
+//        Item = item;
+//    }
 
-    public TodoItem Item { get; }
-}
+//    public TodoItem Item { get; }
+//}
