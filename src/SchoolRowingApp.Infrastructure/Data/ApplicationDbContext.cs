@@ -1,25 +1,20 @@
-﻿using System.Reflection;
-using SchoolRowingApp.Application.Common.Interfaces;
-using SchoolRowingApp.Domain.Entities;
-using SchoolRowingApp.Infrastructure.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using SchoolRowingApp.Domain.Athletes;
+using SchoolRowingApp.Domain.SharedKernel;
 
 namespace SchoolRowingApp.Infrastructure.Data;
 
-public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplicationDbContext
+public class ApplicationDbContext : DbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+    public DbSet<Athlete> Athletes { get; set; }
 
-    //public DbSet<TodoList> TodoLists => Set<TodoList>();
-
-    //public DbSet<TodoItem> TodoItems => Set<TodoItem>();
-
-    public DbSet<Athlete> Athletes => Set<Athlete>();
-
-    protected override void OnModelCreating(ModelBuilder builder)
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        : base(options)
     {
-        base.OnModelCreating(builder);
-        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
     }
 }

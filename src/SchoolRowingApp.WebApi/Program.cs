@@ -1,5 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Npgsql;
+using SchoolRowingApp.Infrastructure.Data;
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration
     .AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: true);
@@ -11,8 +14,39 @@ builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddWebServices();
 
+// Регистрируем MediatR
+builder.Services.AddMediatR(cfg =>
+    cfg.RegisterServicesFromAssembly(typeof(SchoolRowingApp.Application.Athletes.Commands.CreateAthleteCommand).Assembly));
 
 var app = builder.Build();
+// Применение миграций при запуске приложения
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    try
+    {
+        // Проверяем, существует ли таблица миграций
+        if (!context.Database.GetPendingMigrations().Any())
+        {
+            Console.WriteLine("Миграции уже применены. Пропускаем...");
+            return;
+        }
+
+        context.Database.Migrate();
+        Console.WriteLine("Миграции успешно применены.");
+    }
+    catch (Exception ex) when (ex is NpgsqlException npgEx && npgEx.SqlState == "42P07")
+    {
+        // Таблица _EFMigrationsHistory уже существует — пропускаем
+        Console.WriteLine("Таблица миграций уже существует. Пропускаем...");
+    }
+    catch (Exception ex)
+    {
+        // Логируем другие ошибки
+        Console.WriteLine($"Ошибка миграции: {ex.Message}");
+        throw;
+    }
+}
 
 if (app.Environment.IsDevelopment())
 {

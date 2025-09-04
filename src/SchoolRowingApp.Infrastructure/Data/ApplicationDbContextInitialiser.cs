@@ -1,6 +1,5 @@
 ﻿using System.Runtime.InteropServices;
 using SchoolRowingApp.Domain.Constants;
-using SchoolRowingApp.Domain.Entities;
 using SchoolRowingApp.Infrastructure.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;

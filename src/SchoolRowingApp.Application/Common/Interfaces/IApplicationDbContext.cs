@@ -1,4 +1,5 @@
-﻿using SchoolRowingApp.Domain.Entities;
+﻿
+using SchoolRowingApp.Domain.Athletes;
 using System.Threading;
 using System.Threading.Tasks;
 

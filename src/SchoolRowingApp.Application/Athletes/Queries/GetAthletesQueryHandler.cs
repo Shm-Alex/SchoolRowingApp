@@ -1,29 +1,28 @@
-﻿using SchoolRowingApp.Application.Athletes.Dto;
-using SchoolRowingApp.Application.Common.Interfaces;
+﻿using MediatR;
+using SchoolRowingApp.Domain.Athletes;
 
-namespace SchoolRowingApp.Application.Athletes.Queries.GetAthletes;
+namespace SchoolRowingApp.Application.Athletes.Queries;
 
-public class GetAthletesQueryHandler : IRequestHandler<GetAthletesQuery, List<AthleteDto>>
+public record GetAthleteQuery(Guid Id) : IRequest<Athlete>;
+
+public class GetAthleteQueryHandler :
+    IRequestHandler<GetAthleteQuery, Athlete>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly IAthleteRepository _athleteRepository;
 
-    public GetAthletesQueryHandler(IApplicationDbContext context)
+    public GetAthleteQueryHandler(IAthleteRepository athleteRepository)
     {
-        _context = context;
+        _athleteRepository = athleteRepository;
     }
 
-    public async Task<List<AthleteDto>> Handle(GetAthletesQuery request, CancellationToken cancellationToken)
+    public async Task<Athlete> Handle(
+        GetAthleteQuery request,
+        CancellationToken ct)
     {
-        return await _context.Athletes
-            .Include(a => a.Payer)
-            .Select(a => new AthleteDto
-            {
-                Id = a.Id,
-                FirstName = a.FirstName,
-                SecondName = a.SecondName,
-                LastName = a.LastName,
-                PayerName = a.Payer != null ? $"{a.Payer.FirstName} {a.Payer.LastName[0]}" : null
-            })
-            .ToListAsync(cancellationToken);
+        var athlete = await _athleteRepository.GetByIdAsync(request.Id, ct);
+        if (athlete == null)
+            throw new Exception("Атлет не найден");
+
+        return athlete;
     }
 }

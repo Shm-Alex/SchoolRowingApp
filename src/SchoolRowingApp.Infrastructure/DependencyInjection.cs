@@ -1,12 +1,15 @@
-﻿using SchoolRowingApp.Application.Common.Interfaces;
-using SchoolRowingApp.Domain.Constants;
-using SchoolRowingApp.Infrastructure.Data;
-using SchoolRowingApp.Infrastructure.Data.Interceptors;
-using SchoolRowingApp.Infrastructure.Identity;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
+using SchoolRowingApp.Application.Common.Interfaces;
+using SchoolRowingApp.Domain.Athletes;
+using SchoolRowingApp.Domain.Constants;
+using SchoolRowingApp.Domain.SharedKernel;
+using SchoolRowingApp.Infrastructure.Data;
+using SchoolRowingApp.Infrastructure.Data.Interceptors;
+using SchoolRowingApp.Infrastructure.Identity;
+using SchoolRowingApp.Infrastructure.Repositories;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -39,8 +42,9 @@ public static class DependencyInjection
                               );
 #endif
         });
+        services.AddScoped<IAthleteRepository, AthleteRepository>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-        services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
         services.AddScoped<ApplicationDbContextInitialiser>();
 

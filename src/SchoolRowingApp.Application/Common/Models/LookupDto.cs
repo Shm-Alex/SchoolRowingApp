@@ -1,20 +1,20 @@
-﻿using SchoolRowingApp.Domain.Entities;
+﻿//using SchoolRowingApp.Domain.Entities;
 
 
-namespace SchoolRowingApp.Application.Common.Models;
+//namespace SchoolRowingApp.Application.Common.Models;
 
-public class LookupDto
-{
-    public int Id { get; init; }
+//public class LookupDto
+//{
+//    public int Id { get; init; }
 
-    public string? Title { get; init; }
+//    public string? Title { get; init; }
 
-    private class Mapping : Profile
-    {
-        public Mapping()
-        {
-            //CreateMap<TodoList, LookupDto>();
-            //CreateMap<TodoItem, LookupDto>();
-        }
-    }
-}
+//    private class Mapping : Profile
+//    {
+//        public Mapping()
+//        {
+//            //CreateMap<TodoList, LookupDto>();
+//            //CreateMap<TodoItem, LookupDto>();
+//        }
+//    }
+//}
