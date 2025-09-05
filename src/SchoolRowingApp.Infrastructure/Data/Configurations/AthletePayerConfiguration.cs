@@ -1,36 +1,35 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using SchoolRowingApp.Domain.Athletes;
+using SchoolRowingApp.Domain.Payments;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+namespace SchoolRowingApp.Infrastructure.Data.Configurations;
 
-namespace SchoolRowingApp.Infrastructure.Data.Configurations
+public class AthletePayerConfiguration : IEntityTypeConfiguration<AthletePayer>
 {
-    // Infrastructure/Data/Configurations/AthletePayerConfiguration.cs
-            //public class AthletePayerConfiguration : IEntityTypeConfiguration<AthletePayer>
-            //{
-            //    public void Configure(EntityTypeBuilder<AthletePayer> builder)
-            //    {
-            //        builder.ToTable("AthletePayers");
+    public void Configure(EntityTypeBuilder<AthletePayer> builder)
+    {
+        builder.ToTable("AthletePayers");
 
-            //        builder.HasKey(ap => new { ap.AthleteId, ap.PayerId, ap.PayerType });
+        builder.HasKey(ap => new { ap.AthleteId, ap.PayerId });
+        
+        builder.Property(ap => ap.AthleteId)
+               .HasColumnName("AthleteId");
 
-            //        builder.HasOne<Payer>()
-            //               .WithMany()
-            //               .HasForeignKey(ap => ap.PayerId)
-            //               .OnDelete(DeleteBehavior.Cascade);
+        builder.Property(ap => ap.PayerId)
+               .HasColumnName("PayerId");
 
-            //        builder.HasOne<Athlete>()
-            //               .WithMany(a => a.AthletePayers)
-            //               .HasForeignKey(ap => ap.AthleteId)
-            //               .OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne<Payer>()
+               .WithMany()
+               .HasForeignKey(ap => ap.PayerId)
+               .OnDelete(DeleteBehavior.Cascade);
 
-            //        // Храним enum как integer (по умолчанию)
-            //        builder.Property(ap => ap.PayerType)
-            //               .HasConversion<int>();
-            //    }
-            //}
+        builder.HasOne<Athlete>()
+               .WithMany(a => a.AthletePayers)
+               .HasForeignKey(ap => ap.AthleteId)
+               .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Property(ap => ap.PayerType)
+               .HasConversion<int>();
+    }
 }

@@ -35,7 +35,7 @@ public class AthleteRepository : IAthleteRepository
 
     public async Task UpdateAsync(Athlete athlete, CancellationToken ct)
     {
-        _context.Athletes.Update(athlete);
+         _context.Athletes.Update(athlete);
     }
 
     public async Task DeleteAsync(Athlete athlete, CancellationToken ct)
