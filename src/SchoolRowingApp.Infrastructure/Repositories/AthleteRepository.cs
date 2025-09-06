@@ -17,7 +17,7 @@ public class AthleteRepository : IAthleteRepository
     public async Task<Athlete> GetByIdAsync(Guid id, CancellationToken ct)
     {
         return await _context.Athletes
-            .AsNoTracking()
+            //.AsNoTracking() убираем  сущность нужна  для обновления  в update запросах
             .FirstOrDefaultAsync(a => a.Id == id, ct);
     }
 

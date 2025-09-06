@@ -22,6 +22,7 @@ public class AthleteConfiguration : IEntityTypeConfiguration<Athlete>
         builder.Property(a => a.LastName)
                .IsRequired()
                .HasMaxLength(50);
+
         // Явно указываем отношение к AthletePayer
         builder.HasMany(a => a.AthletePayers)
                .WithOne(ap => ap.Athlete)

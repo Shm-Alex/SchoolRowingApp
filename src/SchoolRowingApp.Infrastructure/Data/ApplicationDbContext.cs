@@ -11,6 +11,9 @@ public class ApplicationDbContext : DbContext
     public DbSet<Payer> Payers { get; set; }
     public DbSet<AthletePayer> AthletePayer { get; set; }
 
+
+ 
+
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
@@ -18,6 +21,7 @@ public class ApplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+      
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
     }
 }

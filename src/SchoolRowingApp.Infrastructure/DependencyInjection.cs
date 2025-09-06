@@ -19,7 +19,7 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
         var connectionString = configuration.GetConnectionString("DefaultConnection");
-
+        var defaultSchema = configuration["Database:DefaultSchema"] ?? "public";
         Guard.Against.Null(connectionString, message: "Connection string 'DefaultConnection' not found.");
 
         services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
@@ -32,13 +32,14 @@ public static class DependencyInjection
 #if (UseSQLite)
             options.UseSqlite(connectionString);
 #else
-            //options.UseSqlServer(connectionString);
+            
             options.UseNpgsql(
                                 connectionString,
                                 npgsqlOptions =>
                                 {
                                     npgsqlOptions.EnableRetryOnFailure(); // Автоматические повторы при разрывах
-                                    npgsqlOptions.CommandTimeout(30);      // Таймаут 30 секунд
+                                    npgsqlOptions.CommandTimeout(60);      // Таймаут 30 секунд
+                                    npgsqlOptions.MigrationsHistoryTable("__EFMigrationsHistory", defaultSchema);
                                 }
                               );
 #endif

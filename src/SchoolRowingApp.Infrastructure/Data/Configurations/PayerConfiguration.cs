@@ -4,7 +4,6 @@ using SchoolRowingApp.Domain.Athletes;
 using SchoolRowingApp.Domain.Payments;
 
 namespace SchoolRowingApp.Infrastructure.Data.Configurations;
-
 public class PayerConfiguration : IEntityTypeConfiguration<Payer>
 {
     public void Configure(EntityTypeBuilder<Payer> builder)
@@ -12,12 +11,6 @@ public class PayerConfiguration : IEntityTypeConfiguration<Payer>
         builder.ToTable("Payers");
 
         builder.HasKey(p => p.Id);
-        // Явно указываем отношение к AthletePayer
-        builder.HasMany(p => p.AthletePayers)
-               .WithOne(ap => ap.Payer)
-               .HasForeignKey(ap => ap.PayerId);
-
-     
 
         builder.Property(p => p.FirstName)
                .IsRequired()
@@ -29,5 +22,10 @@ public class PayerConfiguration : IEntityTypeConfiguration<Payer>
         builder.Property(p => p.LastName)
                .IsRequired()
                .HasMaxLength(50);
+
+        // Явно указываем отношение к AthletePayer
+        builder.HasMany(p => p.AthletePayers)
+               .WithOne(ap => ap.Payer)
+               .HasForeignKey(ap => ap.PayerId);
     }
 }

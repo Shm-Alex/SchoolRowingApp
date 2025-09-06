@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SchoolRowingApp.Domain.Athletes;
 using SchoolRowingApp.Domain.Payments;
 using System.Collections.Generic;
 

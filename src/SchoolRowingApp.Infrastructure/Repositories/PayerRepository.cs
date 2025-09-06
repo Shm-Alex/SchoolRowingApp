@@ -17,7 +17,9 @@ public class PayerRepository : IPayerRepository
     public async Task<Payer> GetByIdAsync(Guid id, CancellationToken ct)
     {
         return await _context.Payers
-            .AsNoTracking()
+             .Include(p => p.AthletePayers) // Загружаем список связей
+            .ThenInclude(ap => ap.Athlete) // Для каждой связи загружаем атлета
+            .AsNoTracking() 
             .FirstOrDefaultAsync(p => p.Id == id, ct);
     }
 
@@ -28,7 +30,7 @@ public class PayerRepository : IPayerRepository
         CancellationToken ct)
     {
         return await _context.Payers
-            .AsNoTracking()
+            
             .FirstOrDefaultAsync(p =>
                 p.FirstName == firstName &&
                 p.SecondName == secondName &&

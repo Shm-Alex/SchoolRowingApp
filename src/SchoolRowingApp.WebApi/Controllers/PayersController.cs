@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SchoolRowingApp.Application.Athletes.Commands;
+using SchoolRowingApp.Application.Athletes.Queries;
 using SchoolRowingApp.Application.Payments.Commands;
 using SchoolRowingApp.Application.Payments.Queries;
 using SchoolRowingApp.Domain.Payments;
@@ -30,8 +31,10 @@ public class PayersController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Payer>> GetById(Guid id)
     {
-        // Для получения конкретного плательщика нужно создать соответствующий Query
-        throw new NotImplementedException();
+   
+
+        var payer = await _mediator.Send(new GetPayerQuery(id));
+        return Ok(payer);
     }
 
     [HttpPost]

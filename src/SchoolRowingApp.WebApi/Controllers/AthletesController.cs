@@ -40,10 +40,9 @@ public class AthletesController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id }, new { id });
     }
 
-    [HttpPut()]
+    [HttpPut]
     public async Task<IActionResult> Update([FromBody] UpdateAthleteCommand command)
     {
-    //    command = command with { Id = id };
         await _mediator.Send(command);
         return NoContent();
     }

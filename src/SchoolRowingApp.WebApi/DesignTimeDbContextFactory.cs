@@ -30,7 +30,8 @@ public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<Applicatio
             .Build();
 
         var connectionString = configuration.GetConnectionString("DefaultConnection");
-
+        
+        
         var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
         optionsBuilder.UseNpgsql(connectionString);
 
