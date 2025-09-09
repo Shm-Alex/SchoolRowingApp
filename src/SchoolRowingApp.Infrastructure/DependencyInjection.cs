@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using SchoolRowingApp.Application.Common.Interfaces;
 using SchoolRowingApp.Domain.Athletes;
 using SchoolRowingApp.Domain.Constants;
+using SchoolRowingApp.Domain.Membership;
 using SchoolRowingApp.Domain.Payments;
 using SchoolRowingApp.Domain.SharedKernel;
 using SchoolRowingApp.Infrastructure.Data;
@@ -45,8 +46,12 @@ public static class DependencyInjection
 #endif
         });
         services.AddScoped<IAthleteRepository, AthleteRepository>();
-        services.AddScoped<IPayerRepository, PayerRepository>();
         services.AddScoped<IAthletePayerRepository, AthletePayerRepository>();
+        services.AddScoped<IAthleteMembershipRepository, AthleteMembershipRepository>();
+        
+        services.AddScoped<IMembershipPeriodRepository, MembershipPeriodRepository>();
+        services.AddScoped<IPayerRepository, PayerRepository>();
+
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 

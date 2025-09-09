@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SchoolRowingApp.Domain.Athletes;
+using SchoolRowingApp.Domain.Membership;
 using SchoolRowingApp.Domain.Payments;
 using SchoolRowingApp.Domain.SharedKernel;
 
@@ -10,9 +11,10 @@ public class ApplicationDbContext : DbContext
     public DbSet<Athlete> Athletes { get; set; }
     public DbSet<Payer> Payers { get; set; }
     public DbSet<AthletePayer> AthletePayer { get; set; }
+    public DbSet<MembershipPeriod> MembershipPeriods { get; set; }
+    public DbSet<AthleteMembership> AthleteMemberships { get; set; }
 
 
- 
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)

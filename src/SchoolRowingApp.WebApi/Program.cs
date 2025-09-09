@@ -32,6 +32,7 @@ builder.Services.AddWebServices();
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(SchoolRowingApp.Application.Athletes.Commands.CreateAthleteCommand).Assembly));
 
+
 var app = builder.Build();
 // Применение миграций при запуске приложения
 using (var scope = app.Services.CreateScope())
