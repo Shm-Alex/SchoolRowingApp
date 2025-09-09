@@ -22,7 +22,7 @@ public class GetAllAthletesQueryHandler :
         CancellationToken ct)
     {
         var athletes = await _athleteRepository.GetAllAsync(ct);
-        List<AthleteDto> athletesDto = athletes.Select(a => new AthleteDto() {Id=a.Id,FirstName=a.FirstName,LastName=a.LastName,SecondName=a.SecondName }).ToList();
+        List<AthleteDto> athletesDto = athletes.Select(a => new AthleteDto(a)).ToList();
         return await Task<List<AthleteDto>>.FromResult(athletesDto);
     }
 }

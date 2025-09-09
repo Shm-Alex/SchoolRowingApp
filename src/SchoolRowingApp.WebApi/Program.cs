@@ -1,8 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using Npgsql;
 using SchoolRowingApp.Infrastructure.Data;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 

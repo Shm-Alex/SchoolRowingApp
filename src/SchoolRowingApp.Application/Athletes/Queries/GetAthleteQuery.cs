@@ -1,12 +1,13 @@
 ﻿using MediatR;
+using SchoolRowingApp.Application.Athletes.Dto;
 using SchoolRowingApp.Domain.Athletes;
 
 namespace SchoolRowingApp.Application.Athletes.Queries;
 
-public record GetAthleteQuery(Guid Id) : IRequest<Athlete>;
+public record GetAthleteQuery(Guid Id) : IRequest<AthleteDto>;
 
 public class GetAthleteQueryHandler :
-    IRequestHandler<GetAthleteQuery, Athlete>
+    IRequestHandler<GetAthleteQuery, AthleteDto>
 {
     private readonly IAthleteRepository _athleteRepository;
 
@@ -15,7 +16,7 @@ public class GetAthleteQueryHandler :
         _athleteRepository = athleteRepository;
     }
 
-    public async Task<Athlete> Handle(
+    public async Task<AthleteDto> Handle(
         GetAthleteQuery request,
         CancellationToken ct)
     {
@@ -23,6 +24,6 @@ public class GetAthleteQueryHandler :
         if (athlete == null)
             throw new Exception("Атлет не найден");
 
-        return athlete;
+        return new AthleteDto(athlete) ;
     }
 }

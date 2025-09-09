@@ -5,6 +5,7 @@
     <RootNamespace>SchoolRowingApp.Application</RootNamespace>
     <AssemblyName>SchoolRowingApp.Application</AssemblyName>
     <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

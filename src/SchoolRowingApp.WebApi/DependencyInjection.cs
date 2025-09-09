@@ -1,11 +1,11 @@
 ﻿using Azure.Identity;
-using SchoolRowingApp.Application.Common.Interfaces;
-
-using SchoolRowingApp.Infrastructure.Data;
-using SchoolRowingApp.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models; // Добавь это
+using SchoolRowingApp.Application.Common.Interfaces;
+using SchoolRowingApp.Infrastructure.Data;
+using SchoolRowingApp.Web.Services;
+using System.Reflection;
 
 #if (UseApiOnly)
 using System.Text; // Для JWT
@@ -43,7 +43,20 @@ public static class DependencyInjection
         services.AddSwaggerGen(options =>
         {
             options.SwaggerDoc("v1", new OpenApiInfo { Title = "SchoolRowingApp API", Version = "v1" });
+            // Получаем путь к XML
+            // ранее   xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            // документация на дто генерируется в проекте Application
+            // а {Assembly.GetExecutingAssembly().GetName().Name}.xml даёт SchoolRowingApp.WebApi.xml
+            // прибъём гвоздём путь к файлу $"SchoolRowingApp.Application.xml"; 
 
+            var xmlFile = $"SchoolRowingApp.Application.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
+            // Добавляем документацию в Swagger
+            options.IncludeXmlComments(xmlPath);
+
+            // Включаем аннотации для отображения комментариев к свойствам
+            options.EnableAnnotations();
 #if (UseApiOnly)
             // Добавляем JWT Bearer авторизацию
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -74,16 +87,5 @@ public static class DependencyInjection
         return services;
     }
 
-    //public static IServiceCollection AddKeyVaultIfConfigured(this IServiceCollection services, ConfigurationManager configuration)
-    //{
-    //    var keyVaultUri = configuration["AZURE_KEY_VAULT_ENDPOINT"];
-    //    if (!string.IsNullOrWhiteSpace(keyVaultUri))
-    //    {
-    //        configuration.AddAzureKeyVault(
-    //            new Uri(keyVaultUri),
-    //            new DefaultAzureCredential());
-    //    }
 
-    //    return services;
-    //}
 }
