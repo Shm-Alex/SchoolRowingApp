@@ -27,5 +27,8 @@ public class AthleteConfiguration : IEntityTypeConfiguration<Athlete>
         builder.HasMany(a => a.AthletePayers)
                .WithOne(ap => ap.Athlete)
                .HasForeignKey(ap => ap.AthleteId);
+        builder.HasMany(a => a.AthleteMemberships)
+            .WithOne(am => am.Athlete)
+            .HasForeignKey(am => am.AthleteId);
     }
 }

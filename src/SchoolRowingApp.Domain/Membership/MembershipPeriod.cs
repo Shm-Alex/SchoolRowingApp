@@ -32,11 +32,11 @@ public class MembershipPeriod : Entity
     /// и с каким коэффициентом участия.
     /// </summary>
 
-    private readonly List<AthleteMembership> _athleteMembershipsCollection = new();
+    private readonly List<AthleteMembership> _athleteMemberships = new();
 
     // Сделайте свойство виртуальным для поддержки lazy-loading
     public virtual IReadOnlyList<AthleteMembership> AthleteMemberships =>
-        _athleteMembershipsCollection.AsReadOnly();
+        _athleteMemberships.AsReadOnly();
 
     /// <summary>
     /// Создает новый период членства.

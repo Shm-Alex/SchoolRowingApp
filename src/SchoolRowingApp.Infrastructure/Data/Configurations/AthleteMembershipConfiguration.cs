@@ -23,15 +23,18 @@ public class AthleteMembershipConfiguration : IEntityTypeConfiguration<AthleteMe
                .IsRequired();
 
         // Настройка отношения к Athlete
-        builder.HasOne(am => am.Athlete)
-               .WithMany()
+       builder.HasOne(am => am.Athlete)
+               .WithMany(mp=>mp.AthleteMemberships) 
                .HasForeignKey(am => am.AthleteId)
+               .HasPrincipalKey(a => a.Id)
                .OnDelete(DeleteBehavior.Cascade);
+
 
         // Настройка отношения к MembershipPeriod
         builder.HasOne(am => am.MembershipPeriod)
                .WithMany(mp => mp.AthleteMemberships)
                .HasForeignKey(am => am.MembershipPeriodId)
+               .HasPrincipalKey(mp => mp.Id)
                .OnDelete(DeleteBehavior.Cascade);
     }
 }

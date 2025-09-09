@@ -33,14 +33,19 @@ public class MembershipPeriodConfiguration : IEntityTypeConfiguration<Membership
 
         // Настройка отношения к AthleteMembership
 
-        builder.Metadata.FindNavigation(nameof(MembershipPeriod.AthleteMemberships))
-            ?.SetPropertyAccessMode(PropertyAccessMode.Field);
+        //builder.Metadata.FindNavigation(nameof(MembershipPeriod.AthleteMemberships))
+        //    ?.SetPropertyAccessMode(PropertyAccessMode.Field);
 
-        // Или через HasMany с явным указанием поля
-        builder.HasMany(typeof(AthleteMembership), "_athleteMembershipsCollection")
-               .WithOne()
-               .HasForeignKey("MembershipPeriodId")
-               .OnDelete(DeleteBehavior.Cascade);
+        //// Или через HasMany с явным указанием поля
+        //builder.HasMany(typeof(AthleteMembership), "_athleteMembershipsCollection")
+        //       .WithOne()
+        //       .HasForeignKey("MembershipPeriodId")
+        //       .OnDelete(DeleteBehavior.Cascade);
+
+        builder
+            .HasMany(am=>am.AthleteMemberships)
+            .WithOne(am=>am.MembershipPeriod)
+            .HasForeignKey(am=>am.MembershipPeriodId);
 
     }
 }
