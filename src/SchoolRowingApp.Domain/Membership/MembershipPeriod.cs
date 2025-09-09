@@ -31,8 +31,12 @@ public class MembershipPeriod : Entity
     /// Содержит записи о том, какие атлеты являются членами школы в данный период
     /// и с каким коэффициентом участия.
     /// </summary>
-    private readonly List<AthleteMembership> _athleteMemberships = new();
-    public IReadOnlyList<AthleteMembership> AthleteMemberships => _athleteMemberships.AsReadOnly();
+
+    private readonly List<AthleteMembership> _athleteMembershipsCollection = new();
+
+    // Сделайте свойство виртуальным для поддержки lazy-loading
+    public virtual IReadOnlyList<AthleteMembership> AthleteMemberships =>
+        _athleteMembershipsCollection.AsReadOnly();
 
     /// <summary>
     /// Создает новый период членства.

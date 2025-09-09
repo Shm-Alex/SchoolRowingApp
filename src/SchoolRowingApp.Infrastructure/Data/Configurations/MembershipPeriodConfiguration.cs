@@ -32,9 +32,15 @@ public class MembershipPeriodConfiguration : IEntityTypeConfiguration<Membership
                .IsUnique();
 
         // Настройка отношения к AthleteMembership
-        builder.HasMany(typeof(AthleteMembership), "_athleteMemberships")
+
+        builder.Metadata.FindNavigation(nameof(MembershipPeriod.AthleteMemberships))
+            ?.SetPropertyAccessMode(PropertyAccessMode.Field);
+
+        // Или через HasMany с явным указанием поля
+        builder.HasMany(typeof(AthleteMembership), "_athleteMembershipsCollection")
                .WithOne()
                .HasForeignKey("MembershipPeriodId")
                .OnDelete(DeleteBehavior.Cascade);
+
     }
 }
