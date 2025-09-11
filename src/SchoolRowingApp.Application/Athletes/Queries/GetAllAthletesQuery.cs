@@ -4,7 +4,6 @@ using SchoolRowingApp.Domain.Athletes;
 using System.Collections.Generic;
 
 namespace SchoolRowingApp.Application.Athletes.Queries;
-
 public record GetAllAthletesQuery : IRequest<List<AthleteDto>>;
 
 public class GetAllAthletesQueryHandler :

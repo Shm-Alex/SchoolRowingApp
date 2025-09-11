@@ -25,6 +25,15 @@ public class AthleteDto
         SecondName = a.SecondName;
         Payers = a.AthletePayers.Select(ap => ap.ToAthletePayerDto()).ToList();
     }
+    public AthleteDto() { }
+    //public AthleteDto(Guid id, string firstName, string lastName, string secondName, List<AthletePayerDto> payers)
+    //{
+    //    Id = id;
+    //    FirstName = firstName;
+    //    LastName = lastName;
+    //    SecondName = secondName;
+    //    Payers = payers;
+    //}
 
     /// <summary>
     /// Уникальный идентификатор атлета.
@@ -102,10 +111,11 @@ public record AthletePayerDto
     /// Используется для отображения роли плательщика в интерфейсе.
     /// </summary>
     public string PayerTypeDescription { get; init; }
+    public string PayerType { get; init; }
 }
 public static class AthletePayerDtoHelper
 {
-   public  static AthletePayerDto ToAthletePayerDto(this Domain.Payments.Payer payer, string payerTypeDescription)
-    => new AthletePayerDto() {PayerId= payer.Id, FirstName= payer.FirstName, LastName =payer.LastName, SecondName= payer.SecondName, PayerTypeDescription= payerTypeDescription };
-    public static AthletePayerDto ToAthletePayerDto(this AthletePayer ap) => ap.Payer.ToAthletePayerDto($@"{ap.PayerType.ToString()} ( {ap.Payer.FirstName} {ap.Payer.LastName[0]}) ");
+   public  static AthletePayerDto ToAthletePayerDto(this Domain.Payments.Payer payer, string payerTypeDescription, PayerType payerType)
+    => new AthletePayerDto() {PayerId= payer.Id, FirstName= payer.FirstName, LastName =payer.LastName, SecondName= payer.SecondName, PayerTypeDescription= payerTypeDescription ,PayerType=payerType.ToString()};
+    public static AthletePayerDto ToAthletePayerDto(this AthletePayer ap) => ap.Payer.ToAthletePayerDto($@"{ap.PayerType.ToString()} ( {ap.Payer.FirstName} {ap.Payer.LastName[0]}) ",ap.PayerType);
 }

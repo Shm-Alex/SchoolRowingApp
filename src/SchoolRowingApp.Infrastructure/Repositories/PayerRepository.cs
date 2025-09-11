@@ -30,7 +30,7 @@ public class PayerRepository : IPayerRepository
         CancellationToken ct)
     {
         return await _context.Payers
-            
+            .AsNoTracking()
             .FirstOrDefaultAsync(p =>
                 p.FirstName == firstName &&
                 p.SecondName == secondName &&

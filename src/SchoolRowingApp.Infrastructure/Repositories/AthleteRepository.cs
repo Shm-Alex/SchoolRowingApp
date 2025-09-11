@@ -22,7 +22,12 @@ public class AthleteRepository : IAthleteRepository
             //.AsNoTracking() убираем  сущность нужна  для обновления  в update запросах
             .FirstOrDefaultAsync(a => a.Id == id, ct);
     }
-
+    public async Task<int> GetAllCountAsync(CancellationToken ct)
+    {
+        return await _context.Athletes
+            .AsNoTracking()
+            .CountAsync();
+    }
     public async Task<List<Athlete>> GetAllAsync(CancellationToken ct)
     {
         return await _context.Athletes
@@ -55,4 +60,16 @@ public class AthleteRepository : IAthleteRepository
             );
 
     }
+
+    public async Task<Athlete> GetByFullNameAsync(string firstName, string secondName, string lastName, CancellationToken ct)
+    =>(await _context.Athletes
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(
+                                            p =>
+                                            p.FirstName == firstName &&
+                                            p.SecondName == secondName &&
+                                            p.LastName == lastName,ct))
+        ;
+            
+
 }

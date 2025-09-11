@@ -10,6 +10,7 @@ using SchoolRowingApp.Domain.Payments;
 using SchoolRowingApp.Domain.SharedKernel;
 using SchoolRowingApp.Infrastructure.Data;
 using SchoolRowingApp.Infrastructure.Data.Interceptors;
+using SchoolRowingApp.Infrastructure.Data.SeedData;
 using SchoolRowingApp.Infrastructure.Identity;
 using SchoolRowingApp.Infrastructure.Repositories;
 
@@ -80,6 +81,9 @@ public static class DependencyInjection
 
         services.AddAuthorization(options =>
             options.AddPolicy(Policies.CanPurge, policy => policy.RequireRole(Roles.Administrator)));
+        
+        // Регистрация сервиса инициализации
+        services.AddTransient<DatabaseSeeder>();
 
         return services;
     }
