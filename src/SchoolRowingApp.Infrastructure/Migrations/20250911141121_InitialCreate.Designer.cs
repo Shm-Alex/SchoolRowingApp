@@ -12,7 +12,7 @@ using SchoolRowingApp.Infrastructure.Data;
 namespace SchoolRowingApp.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250905204550_InitialCreate")]
+    [Migration("20250911141121_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -84,6 +84,62 @@ namespace SchoolRowingApp.Infrastructure.Migrations
                     b.ToTable("AthletePayers", (string)null);
                 });
 
+            modelBuilder.Entity("SchoolRowingApp.Domain.Membership.AthleteMembership", b =>
+                {
+                    b.Property<Guid>("AthleteId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("MembershipPeriodId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("ParticipationCoefficient")
+                        .HasColumnType("decimal(3,1)");
+
+                    b.HasKey("AthleteId", "MembershipPeriodId");
+
+                    b.HasIndex("MembershipPeriodId");
+
+                    b.ToTable("AthleteMemberships", "bob");
+                });
+
+            modelBuilder.Entity("SchoolRowingApp.Domain.Membership.MembershipPeriod", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("BaseFee")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Month")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Year", "Month")
+                        .IsUnique();
+
+                    b.ToTable("MembershipPeriods", "bob");
+                });
+
             modelBuilder.Entity("SchoolRowingApp.Domain.Payments.Payer", b =>
                 {
                     b.Property<Guid>("Id")
@@ -135,9 +191,35 @@ namespace SchoolRowingApp.Infrastructure.Migrations
                     b.Navigation("Payer");
                 });
 
+            modelBuilder.Entity("SchoolRowingApp.Domain.Membership.AthleteMembership", b =>
+                {
+                    b.HasOne("SchoolRowingApp.Domain.Athletes.Athlete", "Athlete")
+                        .WithMany("AthleteMemberships")
+                        .HasForeignKey("AthleteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SchoolRowingApp.Domain.Membership.MembershipPeriod", "MembershipPeriod")
+                        .WithMany("AthleteMemberships")
+                        .HasForeignKey("MembershipPeriodId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Athlete");
+
+                    b.Navigation("MembershipPeriod");
+                });
+
             modelBuilder.Entity("SchoolRowingApp.Domain.Athletes.Athlete", b =>
                 {
+                    b.Navigation("AthleteMemberships");
+
                     b.Navigation("AthletePayers");
+                });
+
+            modelBuilder.Entity("SchoolRowingApp.Domain.Membership.MembershipPeriod", b =>
+                {
+                    b.Navigation("AthleteMemberships");
                 });
 
             modelBuilder.Entity("SchoolRowingApp.Domain.Payments.Payer", b =>

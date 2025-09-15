@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql;
 using SchoolRowingApp.Infrastructure.Data;
 using SchoolRowingApp.Infrastructure.Data.SeedData;
@@ -35,41 +37,86 @@ builder.Services.AddMediatR(cfg =>
 
 
 var app = builder.Build();
-
-// ПРАВИЛЬНОЕ МЕСТО ДЛЯ ИНИЦИАЛИЗАЦИИ ДАННЫХ
+// Применение миграций и инициализация данных
 // Применение миграций и инициализация данных
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    var seeder = scope.ServiceProvider.GetRequiredService<DatabaseSeeder>(); // <-- ДОБАВЛЕНО ПОЛУЧЕНИЕ SEEDER
+    var seeder = scope.ServiceProvider.GetRequiredService<DatabaseSeeder>();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
 
     try
     {
-        // Проверяем, есть ли незавершенные миграции
-        if (context.Database.GetPendingMigrations().Any())
+        // Проверяем, существует ли таблица миграций
+        bool migrationsTableExists = context.Database
+            .SqlQueryRaw<bool>("SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_schema = 'bob' AND table_name = '__EFMigrationsHistory')")
+            .AsEnumerable()
+            .FirstOrDefault();
+
+        if (!migrationsTableExists)
         {
-            // Применяем миграции
+            // Таблицы миграций нет, применяем все миграции
+            logger.LogInformation("Таблица миграций не найдена. Применяем все миграции...");
             context.Database.Migrate();
-            Console.WriteLine("Миграции успешно применены.");
         }
         else
         {
-            Console.WriteLine("Миграции уже применены. Пропускаем...");
+            // Проверяем, существует ли таблица MembershipPeriods
+            bool membershipTablesExist = context.Database
+                .SqlQueryRaw<bool>("SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_schema = 'bob' AND table_name = 'MembershipPeriods')")
+                .AsEnumerable()
+                .FirstOrDefault();
+
+            if (!membershipTablesExist)
+            {
+                logger.LogWarning("Обнаружены неполные миграции. Таблицы MembershipPeriods и AthleteMemberships отсутствуют.");
+
+                // Принудительно применяем миграции
+                logger.LogInformation("Применяем недостающие миграции...");
+
+                // Получаем все миграции из сборки
+                var appliedMigrations = context.Database.GetAppliedMigrations().ToList();
+                var allMigrations = context.Database.GetMigrations().ToList();
+
+                // Находим недостающие миграции
+                var pendingMigrations = allMigrations.Except(appliedMigrations).ToList();
+
+                if (pendingMigrations.Any())
+                {
+                    logger.LogInformation("Найдено {Count} непримененных миграций", pendingMigrations.Count);
+
+                    // Используем IMigrator для применения конкретных миграций
+                    var migrator = context.GetService<IMigrator>();
+
+                    // Применяем только недостающие миграции
+                    foreach (var migration in pendingMigrations)
+                    {
+                        logger.LogInformation("Применение миграции: {Migration}", migration);
+                        migrator.Migrate(migration);
+                    }
+                }
+                else
+                {
+                    logger.LogWarning("Миграции в истории присутствуют, но таблицы отсутствуют. Возможно, миграции были удалены или изменены.");
+
+                    // Принудительно пересоздаем таблицу миграций
+                    logger.LogInformation("Пересоздаем таблицу миграций...");
+
+                    // Удаляем текущую таблицу миграций
+                    context.Database.ExecuteSqlRaw("DROP TABLE IF EXISTS \"__EFMigrationsHistory\" CASCADE");
+
+                    // Создаем заново
+                    context.Database.Migrate();
+                }
+            }
         }
 
-        // ВСЕГДА ИНИЦИАЛИЗИРУЕМ ДАННЫЕ, ДАЖЕ ЕСЛИ МИГРАЦИИ УЖЕ ПРИМЕНЕНЫ
-        await seeder.InitializeAsync(); 
-    }
-    catch (Exception ex) when (ex is NpgsqlException npgEx && npgEx.SqlState == "42P07")
-    {
-        // Таблица _EFMigrationsHistory уже существует — пропускаем миграции, но инициализируем данные
-        Console.WriteLine("Таблица миграций уже существует. Пропускаем миграции...");
-        await seeder.InitializeAsync(); // <-- ДОБАВЛЕН ВЫЗОВ ИНИЦИАЛИЗАЦИИ
+        // Теперь инициализируем данные
+        await seeder.InitializeAsync();
     }
     catch (Exception ex)
     {
-        // Логируем другие ошибки
-        Console.WriteLine($"Ошибка инициализации: {ex.Message}");
+        logger.LogError(ex, "Ошибка при инициализации базы данных");
         throw;
     }
 }

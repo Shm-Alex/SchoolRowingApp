@@ -27,9 +27,15 @@ public class AthletesController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<Athlete>> GetById(Guid id)
     {
         var athlete = await _mediator.Send(new GetAthleteQuery(id));
+        if (athlete == null)
+        {
+            return NotFound(new { message = "Атлет не найден" }); // HTTP 404
+        }
         return Ok(athlete);
     }
 
