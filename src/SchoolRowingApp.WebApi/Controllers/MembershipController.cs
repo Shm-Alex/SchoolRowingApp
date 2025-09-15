@@ -1,7 +1,8 @@
 ﻿// WebApi/Controllers/MembershipController.cs
-using Microsoft.AspNetCore.Mvc;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using SchoolRowingApp.Application.Membership.Commands;
+using SchoolRowingApp.Application.Membership.Dto;
 using SchoolRowingApp.Application.Membership.Queries;
 using SchoolRowingApp.Domain.Membership;
 using System.Collections.Generic;
@@ -18,10 +19,15 @@ namespace SchoolRowingApp.WebApi.Controllers;
 public class MembershipController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly ILogger _logger;
 
-    public MembershipController(IMediator mediator)
+    public MembershipController(IMediator mediator,
+        ILogger<MembershipController> logger
+
+        )
     {
         _mediator = mediator;
+        _logger= logger;
     }
 
     /// <summary>
@@ -116,4 +122,67 @@ public class MembershipController : ControllerBase
         await _mediator.Send(new RemoveAthleteMembershipCommand(athleteId, periodId));
         return NoContent();
     }
+    /// <summary>
+    /// Создает отсутствующие периоды членства в указанном диапазоне.
+    /// Создает новые периоды только для тех месяцев, которые отсутствуют в базе данных.
+    /// Пример: создание периодов с 1 сентября 2024 по 31 декабря 2024.
+    /// </summary>
+    [HttpPost("periods/missing")]
+    [ProducesResponseType(typeof(List<MembershipPeriodDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    public async Task<ActionResult<List<MembershipPeriodDto>>> CreateMissingPeriods(
+        [FromBody] CreateMissingPeriodsCommand command)
+    {
+        //var validationResult = await _validator.ValidateAsync(command);
+        //if (!validationResult.IsValid)
+        //{
+        //    return BadRequest(validationResult.Errors);
+        //}
+
+        var createdPeriods = await _mediator.Send(command);
+
+        // Сортируем периоды по дате
+        var sortedPeriods = createdPeriods
+            .OrderBy(p => p.Year)
+            .ThenBy(p => p.Month)
+            .ToList();
+
+        _logger.LogInformation("Создано {Count} новых периодов", sortedPeriods.Count);
+
+        return Ok(sortedPeriods);
+    }
+    /// <summary>
+    /// Обновляет базовый взнос для существующих периодов членства в указанном диапазоне.
+    /// Обновляет только те периоды, которые уже существуют в базе данных.
+    /// Пример: обновление базового взноса для периодов с 1 января 2024 по 31 августа 2024.
+    /// </summary>
+    [HttpPut("periods/existing")]
+    [ProducesResponseType(typeof(List<MembershipPeriodDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<List<MembershipPeriodDto>>> UpdateExistingPeriods(
+        [FromBody] UpdateExistingPeriodsCommand command)
+    {
+        var updatedPeriods = await _mediator.Send(command);
+
+        if (!updatedPeriods.Any())
+        {
+            return NotFound(new { message = "Периоды для обновления не найдены" });
+        }
+
+        // Сортируем периоды по дате
+        var sortedPeriods = updatedPeriods
+            .OrderBy(p => p.Year)
+            .ThenBy(p => p.Month)
+            .ToList();
+
+        _logger.LogInformation("Обновлено {Count} существующих периодов", sortedPeriods.Count);
+
+        return Ok(sortedPeriods);
+    }
+
 }

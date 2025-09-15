@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentValidation.AspNetCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql;
@@ -16,6 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration
     .AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: true);
 builder.Services.AddControllers()
+        
     .AddJsonOptions(options =>
     {
         // Автоматически преобразует имена свойств в camelCase
@@ -23,7 +25,8 @@ builder.Services.AddControllers()
 
         // Дополнительные настройки (опционально)
         options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-    });
+    })
+    ;
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

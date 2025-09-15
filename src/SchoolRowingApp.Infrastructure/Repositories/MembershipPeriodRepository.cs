@@ -51,4 +51,27 @@ public class MembershipPeriodRepository : IMembershipPeriodRepository
     {
         _context.MembershipPeriods.Remove(period);
     }
+    /*
+Но оставляю так  чтобы не путать читателя
+     Проблемы:
+EF Core преобразует это в SQL с использованием функций для создания дат
+Пример для PostgreSQL: WHERE MAKE_DATE("Year", "Month", 1) BETWEEN @p0 AND @p1
+Не может эффективно использовать индекс по Year и Month
+Требует вычисления даты для каждой строки таблицы
+Приводит к full scan таблицы, даже если есть подходящий индекс
+ оптимизация мб такой:
+        int startMonthNumber = startDate.Year * 12 + startDate.Month;
+        int endMonthNumber = endDate.Year * 12 + endDate.Month;
+
+        return await _context.MembershipPeriods
+        .Where(p => (p.Year * 12 + p.Month) >= startMonthNumber && 
+                (p.Year * 12 + p.Month) <= endMonthNumber)
+        .ToListAsync(cancellationToken);
+     */
+    public async Task<List<MembershipPeriod>> GetPeriodsInRangeAsync(DateTime startDate, DateTime endDate, CancellationToken cancellationToken)
+    => await _context.MembershipPeriods
+            .Where(p => new DateTime(p.Year, p.Month, 1) >= startDate &&
+                        new DateTime(p.Year, p.Month, 1) <= endDate)
+            .ToListAsync(cancellationToken);
+    
 }

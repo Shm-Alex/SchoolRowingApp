@@ -58,4 +58,5 @@ public interface IMembershipPeriodRepository
     /// <param name="period">Период членства</param>
     /// <param name="ct">Токен отмены</param>
     Task DeleteAsync(MembershipPeriod period, CancellationToken ct);
+    Task<List<MembershipPeriod>> GetPeriodsInRangeAsync(DateTime startDate, DateTime endDate, CancellationToken cancellationToken);
 }
