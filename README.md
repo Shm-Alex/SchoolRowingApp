@@ -157,7 +157,7 @@ GRANT ALL PRIVILEGES ON DATABASE bobdb TO bob;
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Host=localhost;Port=54321;Database=bobdb;Username=bob;Password=bob;Pooling=true;MaxPoolSize=100;"
+    "DefaultConnection": "Host=localhost;Port=11111;Database=bobdb;Username=bob;Password=xxxx;Pooling=true;MaxPoolSize=100;"
   },
   "Database": {
     "DefaultSchema": "bob"
