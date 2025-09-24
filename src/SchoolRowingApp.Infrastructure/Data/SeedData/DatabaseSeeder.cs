@@ -1,5 +1,6 @@
 ﻿// Infrastructure/Data/SeedData/DatabaseSeeder.cs
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SchoolRowingApp.Application.Athletes.Commands;
@@ -44,11 +45,38 @@ public class DatabaseSeeder
 
         using var scope = _serviceProvider.CreateScope();
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        var seedMembershipPeriodAsync = SeedMembershipPeriodAsync(mediator, cancellationToken);
         var seededCount=await SeedAthletesAsync(mediator, cancellationToken);
         _logger.LogInformation($"Добавлено {seededCount} атлетов");
     }
+
+    /// <summary>
+    /// Инициализирует периоды членства с разными базовыми взносами
+    /// </summary>
+    private async Task<List<Application.Membership.Dto.MembershipPeriodDto>> SeedMembershipPeriodAsync(IMediator mediator, CancellationToken ct)
+    {
+        try
+        {
+            
+            _logger.LogInformation("Инициализация  недостающих периодов  Периоды с базовым взносом 2000 рублей: февраль 2024 - август 2025 ");
+            List<Application.Membership.Dto.MembershipPeriodDto> membership2025 = await mediator.Send(new CreateMissingPeriodsCommand(2000, 2, 2024, 8, 2025), ct);
+            _logger.LogInformation("Инициализация  недостающих периодов Периоды с базовым взносом 3000 рублей: сентябрь 2025 - сентябрь 2026");
+            List<Application.Membership.Dto.MembershipPeriodDto> membership2026 = await mediator.Send(new CreateMissingPeriodsCommand(2000, 9, 2025, 9, 2026), ct);
+            _logger.LogInformation("Инициализация  недостающих периодов  базовых взосов завершена. добавлено записей {Count}", membership2025.Count()+membership2026.Count());
+            return membership2025.Union(membership2026).ToList();
+
+        }
+        catch(Exception ex)
+        {
+             _logger.LogError("Инициализация  недостающих периодов  базовых взосов завершена, с ошибкой ", ex);
+            throw;
+        }
+    }
+
     private async Task<int> SeedAthletesAsync(IMediator mediator, CancellationToken ct)
     {
+        
+
         var existingAthleteCount = await mediator.Send(new GetAthletesCountQuery(), ct);
 
         if (existingAthleteCount >= AthleteWithPayersInitialData.Length)
@@ -510,4 +538,5 @@ public class DatabaseSeeder
  };
     #endregion
     ///Потом доделаю 
+    
 }

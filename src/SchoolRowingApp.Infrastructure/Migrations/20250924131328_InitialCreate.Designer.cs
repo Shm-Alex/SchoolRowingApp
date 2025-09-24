@@ -12,7 +12,7 @@ using SchoolRowingApp.Infrastructure.Data;
 namespace SchoolRowingApp.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250911141121_InitialCreate")]
+    [Migration("20250924131328_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -89,14 +89,14 @@ namespace SchoolRowingApp.Infrastructure.Migrations
                     b.Property<Guid>("AthleteId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("MembershipPeriodId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("MembershipPeriodYear")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("MembershipPeriodMonth")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("timestamp with time zone");
@@ -104,18 +104,20 @@ namespace SchoolRowingApp.Infrastructure.Migrations
                     b.Property<decimal>("ParticipationCoefficient")
                         .HasColumnType("decimal(3,1)");
 
-                    b.HasKey("AthleteId", "MembershipPeriodId");
+                    b.HasKey("AthleteId", "MembershipPeriodYear", "MembershipPeriodMonth");
 
-                    b.HasIndex("MembershipPeriodId");
+                    b.HasIndex("MembershipPeriodYear", "MembershipPeriodMonth");
 
                     b.ToTable("AthleteMemberships", "bob");
                 });
 
             modelBuilder.Entity("SchoolRowingApp.Domain.Membership.MembershipPeriod", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                    b.Property<int>("Year")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Month")
+                        .HasColumnType("integer");
 
                     b.Property<decimal>("BaseFee")
                         .HasColumnType("decimal(10,2)");
@@ -126,18 +128,16 @@ namespace SchoolRowingApp.Infrastructure.Migrations
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("Month")
-                        .HasColumnType("integer");
+                    b.HasKey("Year", "Month");
 
-                    b.Property<int>("Year")
-                        .HasColumnType("integer");
+                    b.ToTable("MembershipPeriods", "bob", t =>
+                        {
+                            t.HasCheckConstraint("CK_BaseFee", "BaseFee >= 0");
 
-                    b.HasKey("Id");
+                            t.HasCheckConstraint("CK_Month", "Month >= 1 AND Month <= 12");
 
-                    b.HasIndex("Year", "Month")
-                        .IsUnique();
-
-                    b.ToTable("MembershipPeriods", "bob");
+                            t.HasCheckConstraint("CK_Year", "Year >= 2020 AND Year <= 2100");
+                        });
                 });
 
             modelBuilder.Entity("SchoolRowingApp.Domain.Payments.Payer", b =>
@@ -201,7 +201,7 @@ namespace SchoolRowingApp.Infrastructure.Migrations
 
                     b.HasOne("SchoolRowingApp.Domain.Membership.MembershipPeriod", "MembershipPeriod")
                         .WithMany("AthleteMemberships")
-                        .HasForeignKey("MembershipPeriodId")
+                        .HasForeignKey("MembershipPeriodYear", "MembershipPeriodMonth")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

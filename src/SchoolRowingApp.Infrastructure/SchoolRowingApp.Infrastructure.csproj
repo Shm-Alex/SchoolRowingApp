@@ -27,7 +27,6 @@
     <!--#if (UseLocalDB)-->
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
     <!--#endif-->
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -40,6 +39,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SchoolRowingApp.Application\SchoolRowingApp.Application.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

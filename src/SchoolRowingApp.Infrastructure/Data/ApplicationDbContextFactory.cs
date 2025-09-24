@@ -7,6 +7,7 @@ namespace SchoolRowingApp.Infrastructure.Data;
 
 public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
 {
+
     public ApplicationDbContext CreateDbContext(string[] args)
     {
         // Определяем путь к корню проекта
@@ -33,9 +34,11 @@ public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<Applicati
             npgsqlOptions =>
             {
                 npgsqlOptions.MigrationsHistoryTable("__EFMigrationsHistory", defaultSchema);
+
             }
         );
 
         return new ApplicationDbContext(optionsBuilder.Options);
     }
+
 }

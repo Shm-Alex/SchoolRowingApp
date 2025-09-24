@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using SchoolRowingApp.Domain.Athletes;
 using SchoolRowingApp.Domain.Membership;
 using SchoolRowingApp.Domain.Payments;
 using SchoolRowingApp.Domain.SharedKernel;
+
 
 namespace SchoolRowingApp.Infrastructure.Data;
 

@@ -90,19 +90,19 @@ using (var scope = app.Services.CreateScope())
                         migrator.Migrate(migration);
                     }
                 }
-                else
-                {
-                    logger.LogWarning("Миграции в истории присутствуют, но таблицы отсутствуют. Возможно, миграции были удалены или изменены.");
+                //else
+                //{
+                //    logger.LogWarning("Миграции в истории присутствуют, но таблицы отсутствуют. Возможно, миграции были удалены или изменены.");
 
-                    // Принудительно пересоздаем таблицу миграций
-                    logger.LogInformation("Пересоздаем таблицу миграций...");
+                //    // Принудительно пересоздаем таблицу миграций
+                //    logger.LogInformation("Пересоздаем таблицу миграций...");
 
-                    // Удаляем текущую таблицу миграций
-                    context.Database.ExecuteSqlRaw("DROP TABLE IF EXISTS \"__EFMigrationsHistory\" CASCADE");
+                //    // Удаляем текущую таблицу миграций
+                //    context.Database.ExecuteSqlRaw("DROP TABLE IF EXISTS \"__EFMigrationsHistory\" CASCADE");
 
-                    // Создаем заново
-                    context.Database.Migrate();
-                }
+                //    // Создаем заново
+                //    context.Database.Migrate();
+                //}
             //}
         }
 

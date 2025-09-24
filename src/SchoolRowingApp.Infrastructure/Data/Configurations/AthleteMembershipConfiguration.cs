@@ -26,10 +26,10 @@ public class AthleteMembershipConfiguration : IEntityTypeConfiguration<AthleteMe
                .HasPrincipalKey(mp => new { mp.Year, mp.Month })
                .OnDelete(DeleteBehavior.Cascade);
 
-        // Внешний ключ на Athlete
+        // Отношение к Athlete (зависимая сторона)
         builder.HasOne(am => am.Athlete)
-               .WithMany()
-               .HasForeignKey(nameof(AthleteMembership.AthleteId))
+               .WithMany(a => a.AthleteMemberships)
+               .HasForeignKey(am => am.AthleteId)
                .HasPrincipalKey(a => a.Id)
                .OnDelete(DeleteBehavior.Cascade);
 

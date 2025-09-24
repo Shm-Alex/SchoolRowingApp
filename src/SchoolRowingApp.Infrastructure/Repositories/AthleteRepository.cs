@@ -19,6 +19,8 @@ public class AthleteRepository : IAthleteRepository
         return await _context.Athletes
             .Include(a => a.AthletePayers)
             .ThenInclude(ap => ap.Payer)
+            .Include(a => a.AthleteMemberships)
+            .ThenInclude(am => am.MembershipPeriod)
             //.AsNoTracking() убираем  сущность нужна  для обновления  в update запросах
             .FirstOrDefaultAsync(a => a.Id == id, ct);
     }
@@ -33,6 +35,8 @@ public class AthleteRepository : IAthleteRepository
         return await _context.Athletes
             .Include(a=>a.AthletePayers)
             .ThenInclude(ap=>ap.Payer)
+            .Include(a => a.AthleteMemberships)
+            .ThenInclude(am => am.MembershipPeriod)
             .AsNoTracking()
             .ToListAsync(ct);
     }

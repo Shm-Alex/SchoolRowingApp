@@ -2,6 +2,7 @@
 using SchoolRowingApp.Domain.SharedKernel;
 using SchoolRowingApp.Domain.Athletes;
 using SchoolRowingApp.Domain.Membership;
+using System.ComponentModel.DataAnnotations;
 
 namespace SchoolRowingApp.Domain.Membership;
 
@@ -9,15 +10,17 @@ namespace SchoolRowingApp.Domain.Membership;
 /// Членство атлета в школе на определенный период (месяц).
 /// Определяет коэффициент участия атлета и используется для расчета взноса.
 /// </summary>
-public class AthleteMembership : GuidEntity
+public class AthleteMembership : CompositeKeyEntity
 {
+    [Key]
     /// <summary>
     /// ID атлета, который является членом школы.
     /// </summary>
     public Guid AthleteId { get; private set; }
 
-    
+    [Key]
     public int MembershipPeriodMonth { get; private set; }
+    [Key]
     public int MembershipPeriodYear { get; private set; }
 
     /// <summary>

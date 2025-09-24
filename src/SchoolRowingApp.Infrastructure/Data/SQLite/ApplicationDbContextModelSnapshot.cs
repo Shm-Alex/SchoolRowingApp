@@ -92,14 +92,8 @@ namespace SchoolRowingApp.Infrastructure.Migrations
                     b.Property<int>("MembershipPeriodMonth")
                         .HasColumnType("integer");
 
-                    b.Property<Guid?>("AthleteId1")
-                        .HasColumnType("uuid");
-
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("timestamp with time zone");
@@ -108,8 +102,6 @@ namespace SchoolRowingApp.Infrastructure.Migrations
                         .HasColumnType("decimal(3,1)");
 
                     b.HasKey("AthleteId", "MembershipPeriodYear", "MembershipPeriodMonth");
-
-                    b.HasIndex("AthleteId1");
 
                     b.HasIndex("MembershipPeriodYear", "MembershipPeriodMonth");
 
@@ -199,14 +191,10 @@ namespace SchoolRowingApp.Infrastructure.Migrations
             modelBuilder.Entity("SchoolRowingApp.Domain.Membership.AthleteMembership", b =>
                 {
                     b.HasOne("SchoolRowingApp.Domain.Athletes.Athlete", "Athlete")
-                        .WithMany()
+                        .WithMany("AthleteMemberships")
                         .HasForeignKey("AthleteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("SchoolRowingApp.Domain.Athletes.Athlete", null)
-                        .WithMany("AthleteMemberships")
-                        .HasForeignKey("AthleteId1");
 
                     b.HasOne("SchoolRowingApp.Domain.Membership.MembershipPeriod", "MembershipPeriod")
                         .WithMany("AthleteMemberships")

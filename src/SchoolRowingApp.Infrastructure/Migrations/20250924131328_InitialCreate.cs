@@ -35,7 +35,6 @@ namespace SchoolRowingApp.Infrastructure.Migrations
                 schema: "bob",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Month = table.Column<int>(type: "integer", nullable: false),
                     Year = table.Column<int>(type: "integer", nullable: false),
                     BaseFee = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
@@ -44,7 +43,10 @@ namespace SchoolRowingApp.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MembershipPeriods", x => x.Id);
+                    table.PrimaryKey("PK_MembershipPeriods", x => new { x.Year, x.Month });
+                    table.CheckConstraint("CK_BaseFee", @"""BaseFee"" >= 0");
+                    table.CheckConstraint("CK_Month", @"""Month"" >= 1 AND ""Month"" <= 12");
+                    table.CheckConstraint("CK_Year", @"""Year"" >= 2020 AND ""Year"" <= 2100");
                 });
 
             migrationBuilder.CreateTable(
@@ -69,15 +71,15 @@ namespace SchoolRowingApp.Infrastructure.Migrations
                 columns: table => new
                 {
                     AthleteId = table.Column<Guid>(type: "uuid", nullable: false),
-                    MembershipPeriodId = table.Column<Guid>(type: "uuid", nullable: false),
+                    MembershipPeriodMonth = table.Column<int>(type: "integer", nullable: false),
+                    MembershipPeriodYear = table.Column<int>(type: "integer", nullable: false),
                     ParticipationCoefficient = table.Column<decimal>(type: "numeric(3,1)", nullable: false),
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AthleteMemberships", x => new { x.AthleteId, x.MembershipPeriodId });
+                    table.PrimaryKey("PK_AthleteMemberships", x => new { x.AthleteId, x.MembershipPeriodYear, x.MembershipPeriodMonth });
                     table.ForeignKey(
                         name: "FK_AthleteMemberships_Athletes_AthleteId",
                         column: x => x.AthleteId,
@@ -85,11 +87,11 @@ namespace SchoolRowingApp.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AthleteMemberships_MembershipPeriods_MembershipPeriodId",
-                        column: x => x.MembershipPeriodId,
+                        name: "FK_AthleteMemberships_MembershipPeriods_MembershipPeriodYear_M~",
+                        columns: x => new { x.MembershipPeriodYear, x.MembershipPeriodMonth },
                         principalSchema: "bob",
                         principalTable: "MembershipPeriods",
-                        principalColumn: "Id",
+                        principalColumns: new[] { "Year", "Month" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -100,9 +102,9 @@ namespace SchoolRowingApp.Infrastructure.Migrations
                     AthleteId = table.Column<Guid>(type: "uuid", nullable: false),
                     PayerId = table.Column<Guid>(type: "uuid", nullable: false),
                     PayerType = table.Column<int>(type: "integer", nullable: false),
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -122,22 +124,15 @@ namespace SchoolRowingApp.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AthleteMemberships_MembershipPeriodId",
+                name: "IX_AthleteMemberships_MembershipPeriodYear_MembershipPeriodMon~",
                 schema: "bob",
                 table: "AthleteMemberships",
-                column: "MembershipPeriodId");
+                columns: new[] { "MembershipPeriodYear", "MembershipPeriodMonth" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AthletePayers_PayerId",
                 table: "AthletePayers",
                 column: "PayerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MembershipPeriods_Year_Month",
-                schema: "bob",
-                table: "MembershipPeriods",
-                columns: new[] { "Year", "Month" },
-                unique: true);
         }
 
         /// <inheritdoc />

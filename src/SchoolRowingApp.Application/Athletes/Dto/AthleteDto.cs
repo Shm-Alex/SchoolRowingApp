@@ -24,6 +24,7 @@ public class AthleteDto
         LastName = a.LastName;
         SecondName = a.SecondName;
         Payers = a.AthletePayers.Select(ap => ap.ToAthletePayerDto()).ToList();
+        MembershipPeriods=a.AthleteMemberships.Select(mp=>new Membership.Dto.MembershipPeriodDto(mp.MembershipPeriodMonth,mp.MembershipPeriodYear,mp.ParticipationCoefficient*mp.MembershipPeriod.BaseFee)).ToList();
     }
     public AthleteDto() { }
     //public AthleteDto(Guid id, string firstName, string lastName, string secondName, List<AthletePayerDto> payers)
@@ -69,6 +70,10 @@ public class AthleteDto
     /// Используется для отображения информации о финансировании занятий атлета.
     /// </summary>
     public List<AthletePayerDto> Payers { get; set; }
+    /// <summary>
+    /// Список участия  атлета в  клубе 
+    /// </summary>
+    public List<Membership.Dto.MembershipPeriodDto> MembershipPeriods{ get; set; }
 }
 
 
