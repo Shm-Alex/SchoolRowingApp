@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using SchoolRowingApp.Application.Athletes.Commands;
 using SchoolRowingApp.Application.Athletes.Dto;
 using SchoolRowingApp.Application.Athletes.Queries;
+using SchoolRowingApp.Application.Membership.Dto;
 using SchoolRowingApp.Application.Payments.Commands;
 using SchoolRowingApp.Domain.Athletes;
 using SchoolRowingApp.Domain.Membership;
@@ -13,6 +14,7 @@ using SchoolRowingApp.Domain.Payments;
 using SchoolRowingApp.Infrastructure.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -61,7 +63,7 @@ public class DatabaseSeeder
             _logger.LogInformation("Инициализация  недостающих периодов  Периоды с базовым взносом 2000 рублей: февраль 2024 - август 2025 ");
             List<Application.Membership.Dto.MembershipPeriodDto> membership2025 = await mediator.Send(new CreateMissingPeriodsCommand(2000, 2, 2024, 8, 2025), ct);
             _logger.LogInformation("Инициализация  недостающих периодов Периоды с базовым взносом 3000 рублей: сентябрь 2025 - сентябрь 2026");
-            List<Application.Membership.Dto.MembershipPeriodDto> membership2026 = await mediator.Send(new CreateMissingPeriodsCommand(2000, 9, 2025, 9, 2026), ct);
+            List<Application.Membership.Dto.MembershipPeriodDto> membership2026 = await mediator.Send(new CreateMissingPeriodsCommand(3000, 9, 2025, 9, 2026), ct);
             _logger.LogInformation("Инициализация  недостающих периодов  базовых взосов завершена. добавлено записей {Count}", membership2025.Count()+membership2026.Count());
             return membership2025.Union(membership2026).ToList();
 
@@ -72,6 +74,7 @@ public class DatabaseSeeder
             throw;
         }
     }
+    
 
     private async Task<int> SeedAthletesAsync(IMediator mediator, CancellationToken ct)
     {
@@ -119,6 +122,7 @@ public class DatabaseSeeder
         FirstName = "Дмитрий",
         SecondName = "Александрович",
         LastName = "Головин",
+        AthleteMemberships=FillMembership(new DateOnly(2024,02,1),new DateOnly(2026,12,1),1.0M).ToList(),
         Payers = new List<AthletePayerDto>
         {
             new AthletePayerDto
@@ -144,6 +148,7 @@ public class DatabaseSeeder
         FirstName = "Вероника",
         SecondName = "Дмитриевна",
         LastName = "Чебулаева",
+        AthleteMemberships=FillMembership(new DateOnly(2024,02,1),new DateOnly(2026,12,1),1.0M).ToList(),
         Payers = new List<AthletePayerDto>
         {
             new AthletePayerDto
@@ -161,6 +166,7 @@ public class DatabaseSeeder
         FirstName = "Леонид",
         SecondName = "Игоревич",
         LastName = "Черногривов",
+        AthleteMemberships=FillMembership(new DateOnly(2024,02,1),new DateOnly(2026,12,1),1.0M).ToList(),
         Payers = new List<AthletePayerDto>
         {
             new AthletePayerDto
@@ -178,6 +184,7 @@ public class DatabaseSeeder
         FirstName = "Александр",
         SecondName = "Андреевич",
         LastName = "Шишлин",
+        AthleteMemberships=FillMembership(new DateOnly(2024,02,1),new DateOnly(2026,12,1),1.0M).ToList(),
         Payers = new List<AthletePayerDto>
         {
             new AthletePayerDto
@@ -203,6 +210,7 @@ public class DatabaseSeeder
         FirstName = "Никита",
         SecondName = "Сергеевич",
         LastName = "Резников",
+        AthleteMemberships=FillMembership(new DateOnly(2024,02,1),new DateOnly(2026,12,1),1.0M).ToList(),
         Payers = new List<AthletePayerDto>
         {
             new AthletePayerDto
@@ -228,6 +236,7 @@ public class DatabaseSeeder
         FirstName = "Ксения",
         SecondName = "Антоновна",
         LastName = "Жгун",
+        AthleteMemberships=FillMembership(new DateOnly(2024,02,1),new DateOnly(2025,05,13),1.0M).ToList(),
         Payers = new List<AthletePayerDto>
         {
             new AthletePayerDto
@@ -245,6 +254,7 @@ public class DatabaseSeeder
         FirstName = "Елисей",
         SecondName = "Петрович",
         LastName = "Ивлиев",
+        AthleteMemberships=FillMembership(new DateOnly(2024,02,1),new DateOnly(2026,12,1),1.0M).ToList(),
         Payers = new List<AthletePayerDto>
         {
             new AthletePayerDto
@@ -270,6 +280,7 @@ public class DatabaseSeeder
         FirstName = "Егор",
         SecondName = "Петрович",
         LastName = "Ивлиев",
+        AthleteMemberships=FillMembership(new DateOnly(2024,02,1),new DateOnly(2026,12,1),1.0M).ToList(),
         Payers = new List<AthletePayerDto>
         {
             new AthletePayerDto
@@ -295,6 +306,9 @@ public class DatabaseSeeder
         FirstName = "Макар",
         SecondName = "Петрович",
         LastName = "Ивлиев",
+        AthleteMemberships= 
+            FillMembership(new DateOnly(2024,06,1),new DateOnly(2024,09,1),0.5M).
+            Union(FillMembership(new DateOnly(2024,09,2),new DateOnly(2026,12,1),1M)).ToList(),
         Payers = new List<AthletePayerDto>
         {
             new AthletePayerDto
@@ -320,6 +334,7 @@ public class DatabaseSeeder
         FirstName = "Тимур",
         SecondName = "Наилевич",
         LastName = "Сулейманов",
+        AthleteMemberships=FillMembership(new DateOnly(2024,02,1),new DateOnly(2026,12,1),1M).ToList(),
         Payers = new List<AthletePayerDto>
         {
             new AthletePayerDto
@@ -345,6 +360,7 @@ public class DatabaseSeeder
         FirstName = "Дмитрий",
         SecondName = "Александрович",
         LastName = "Никишин",
+        AthleteMemberships=FillMembership(new DateOnly(2024,02,1),new DateOnly(2024,12,15),1M).ToList(),
         Payers = new List<AthletePayerDto>
         {
             new AthletePayerDto
@@ -362,6 +378,7 @@ public class DatabaseSeeder
         FirstName = "Маргарита",
         SecondName = "Сергеевна",
         LastName = "Васильева",
+        AthleteMemberships=FillMembership(new DateOnly(2024,02,1),new DateOnly(2024,10,15),1M).ToList(),
         Payers = new List<AthletePayerDto>
         {
             new AthletePayerDto
@@ -379,6 +396,7 @@ public class DatabaseSeeder
         FirstName = "Серафим",
         SecondName = "Владимирович",
         LastName = "Крылов",
+         AthleteMemberships=FillMembership(new DateOnly(2024,02,1),new DateOnly(2026,12,1),1M).ToList(),
         Payers = new List<AthletePayerDto>
         {
             new AthletePayerDto
@@ -396,6 +414,7 @@ public class DatabaseSeeder
         FirstName = "Демид",
         SecondName = "Вадимович",
         LastName = "Суханов",
+         AthleteMemberships=FillMembership(new DateOnly(2024,02,1),new DateOnly(2024,04,15),1M).ToList(),
         Payers = new List<AthletePayerDto>
         {
             new AthletePayerDto
@@ -413,6 +432,7 @@ public class DatabaseSeeder
         FirstName = "Егор",
         SecondName = "Юрьевич",
         LastName = "Чеканов",
+        AthleteMemberships=FillMembership(new DateOnly(2024,02,1),new DateOnly(2025,05,11),1M).ToList(),
         Payers = new List<AthletePayerDto>
         {
             new AthletePayerDto
@@ -438,6 +458,7 @@ public class DatabaseSeeder
         FirstName = "Максим",
         SecondName = "Русланович",
         LastName = "Нуреев",
+        AthleteMemberships=FillMembership(new DateOnly(2024,02,1),new DateOnly(2024,09,15),1M).ToList(),
         Payers = new List<AthletePayerDto>
         {
             new AthletePayerDto
@@ -455,6 +476,7 @@ public class DatabaseSeeder
         FirstName = "Артём",
         SecondName = "Русланович",
         LastName = "Нуреев",
+        AthleteMemberships=FillMembership(new DateOnly(2024,02,1),new DateOnly(2024,09,15),1M).ToList(),
         Payers = new List<AthletePayerDto>
         {
             new AthletePayerDto
@@ -472,6 +494,7 @@ public class DatabaseSeeder
         FirstName = "Тимур",
         SecondName = "Мохамедович",
         LastName = "Хашиша",
+        AthleteMemberships=FillMembership(new DateOnly(2024,02,1),new DateOnly(2024,02,1),1M).ToList(),
         Payers = new List<AthletePayerDto>
         {
             new AthletePayerDto
@@ -489,6 +512,7 @@ public class DatabaseSeeder
         FirstName = "Степан",
         SecondName = string.Empty,
         LastName = "Ромашкин",
+        AthleteMemberships=FillMembership(new DateOnly(2024,09,15),new DateOnly(2026,12,1),1M).ToList(),
         Payers = new List<AthletePayerDto>
         {
             new AthletePayerDto
@@ -506,6 +530,7 @@ public class DatabaseSeeder
         FirstName = "Платон",
         SecondName = "Иванов",
         LastName = "Кондратенко",
+        AthleteMemberships=FillMembership(new DateOnly(2025,04,15),new DateOnly(2026,12,1),1M).ToList(),
         Payers = new List<AthletePayerDto>
         {
             new AthletePayerDto
@@ -523,6 +548,7 @@ public class DatabaseSeeder
         FirstName = "Максим",
         SecondName = string.Empty,
         LastName = "Мирошниченнко",
+        AthleteMemberships=FillMembership(new DateOnly(2025,04,15),new DateOnly(2026,12,1),1M).ToList(),
         Payers = new List<AthletePayerDto>
         {
             new AthletePayerDto
@@ -534,9 +560,39 @@ public class DatabaseSeeder
                 PayerTypeDescription = "Сам атлет"
             }
         }
+    },
+    new AthleteDto()
+    {
+        FirstName = "Василий",//Устинов Василий Николаевич
+        SecondName = "Николаевич",
+        LastName = "Устинов",
+        AthleteMemberships=FillMembership(new DateOnly(2025,09,15),new DateOnly(2026,12,1),1M).ToList(),
+        Payers = new List<AthletePayerDto>
+        {
+            new AthletePayerDto
+            {
+                FirstName = "Николай",//Устинов Николай Валентинович 
+                SecondName = "Валентинович",
+                LastName = "Устинов",
+                PayerType = PayerType.Father.ToString(),
+                PayerTypeDescription = "Папа"
+            }
+        }
     }
  };
+
+    private IEnumerable<AthleteMembershipDto> FillMembership(DateOnly startMonth, DateOnly endMonth, decimal baseFee)
+    {
+        if (startMonth > endMonth)
+            throw new ArgumentException("endDate must be greater than or equal to startDate");
+
+        while (startMonth <= endMonth)
+        {
+            yield return new AthleteMembershipDto(startMonth.Month,startMonth.Year,baseFee);
+            startMonth = startMonth.AddMonths(1);
+        }
+    }
     #endregion
     ///Потом доделаю 
-    
+
 }

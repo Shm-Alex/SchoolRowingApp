@@ -1,5 +1,6 @@
 ﻿
 
+using SchoolRowingApp.Application.Membership.Dto;
 using SchoolRowingApp.Domain.Athletes;
 
 namespace SchoolRowingApp.Application.Athletes.Dto;
@@ -9,6 +10,7 @@ namespace SchoolRowingApp.Application.Athletes.Dto;
 /// DTO для представления атлета в системе.
 /// Используется для передачи данных об атлете через API.
 /// Содержит основную информацию об атлете и список связанных плательщиков.
+/// а также создаёт  информацию о членстве в школе MembershipPeriods 
 /// </summary>
 public class AthleteDto
 {
@@ -24,17 +26,10 @@ public class AthleteDto
         LastName = a.LastName;
         SecondName = a.SecondName;
         Payers = a.AthletePayers.Select(ap => ap.ToAthletePayerDto()).ToList();
-        MembershipPeriods=a.AthleteMemberships.Select(mp=>new Membership.Dto.MembershipPeriodDto(mp.MembershipPeriodMonth,mp.MembershipPeriodYear,mp.ParticipationCoefficient*mp.MembershipPeriod.BaseFee)).ToList();
+        AthleteMemberships=a.AthleteMemberships.Select(mp=> new AthleteMembershipDto(mp)).ToList();
     }
     public AthleteDto() { }
-    //public AthleteDto(Guid id, string firstName, string lastName, string secondName, List<AthletePayerDto> payers)
-    //{
-    //    Id = id;
-    //    FirstName = firstName;
-    //    LastName = lastName;
-    //    SecondName = secondName;
-    //    Payers = payers;
-    //}
+
 
     /// <summary>
     /// Уникальный идентификатор атлета.
@@ -73,9 +68,8 @@ public class AthleteDto
     /// <summary>
     /// Список участия  атлета в  клубе 
     /// </summary>
-    public List<Membership.Dto.MembershipPeriodDto> MembershipPeriods{ get; set; }
+    public List<AthleteMembershipDto> AthleteMemberships{ get; set; }
 }
-
 
 /// <summary>
 /// DTO для представления плательщика атлета.

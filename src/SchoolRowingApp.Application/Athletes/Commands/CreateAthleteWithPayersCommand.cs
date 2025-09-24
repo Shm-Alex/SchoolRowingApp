@@ -2,7 +2,9 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using SchoolRowingApp.Application.Athletes.Dto;
+using SchoolRowingApp.Application.Membership.Dto;
 using SchoolRowingApp.Domain.Athletes;
+using SchoolRowingApp.Domain.Membership;
 using SchoolRowingApp.Domain.Payments;
 using SchoolRowingApp.Domain.SharedKernel;
 
@@ -18,23 +20,30 @@ public record CreateAthleteWithPayersCommand(AthleteDto AthleteDto) : IRequest<G
 /// <summary>
 /// Обработчик команды создания атлета с плательщиками.
 /// Выполняет все операции в одной транзакции, соблюдая бизнес-правила.
+/// и периодами членства  MembershipPeriods 
 /// </summary>
 public class CreateAthleteWithPayersCommandHandler :
     IRequestHandler<CreateAthleteWithPayersCommand, Guid>
 {
     private readonly IAthleteRepository _athleteRepository;
     private readonly IPayerRepository _payerRepository;
+    private readonly IAthleteMembershipRepository _athleteMembershipRepository;
+    private readonly IMembershipPeriodRepository _membershipPeriodRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<CreateAthleteWithPayersCommandHandler> _logger;
 
     public CreateAthleteWithPayersCommandHandler(
         IAthleteRepository athleteRepository,
         IPayerRepository payerRepository,
+        IAthleteMembershipRepository athleteMembershipRepository,
+        IMembershipPeriodRepository membershipPeriodRepository,
         IUnitOfWork unitOfWork,
         ILogger<CreateAthleteWithPayersCommandHandler> logger)
     {
         _athleteRepository = athleteRepository;
         _payerRepository = payerRepository;
+        _athleteMembershipRepository= athleteMembershipRepository;
+        _membershipPeriodRepository= membershipPeriodRepository;
         _unitOfWork = unitOfWork;
         _logger = logger;
     }
@@ -78,7 +87,11 @@ public class CreateAthleteWithPayersCommandHandler :
             {
                 await ProcessPayerForAthleteAsync(athlete, payerDto, ct);
             }
-
+            // Обрабатываем и периоды членства  MembershipPeriods 
+            foreach (AthleteMembershipDto membershipPeriodDto in request.AthleteDto.AthleteMemberships)
+            {
+                await ProcessMembershipPeriodForAthleteAsync(athlete, membershipPeriodDto, ct);
+            }
             await _unitOfWork.SaveChangesAsync(ct);
 
             _logger.LogInformation("Атлет успешно создан с ID: {Id}", athlete.Id);
@@ -89,6 +102,20 @@ public class CreateAthleteWithPayersCommandHandler :
             _logger.LogError(ex, "Ошибка при создании атлета с плательщиками");
             throw;
         }
+    }
+
+    private async Task ProcessMembershipPeriodForAthleteAsync(Athlete athlete, AthleteMembershipDto athleteMembershipDto, CancellationToken ct)
+    {
+        //var _membershipPeriod = await _membershipPeriodRepository
+        //    .GetByYearAndMonthAsync(athleteMembershipDto.MembershipPeriodYear, athleteMembershipDto.MembershipPeriodMonth, ct);
+        //if (_membershipPeriod == null) {
+        //    throw new DomainException("Необходимо сначала добавить   в бд информацию о базовых взносах в SeedMembershipPeriodAsync");
+        //}
+
+        athlete.SetMembership
+            (athleteMembershipDto.MembershipPeriodMonth,
+            athleteMembershipDto.MembershipPeriodYear,
+            athleteMembershipDto.ParticipationCoefficient);
     }
 
     private async Task ProcessPayerForAthleteAsync(Athlete athlete, AthletePayerDto payerDto, CancellationToken ct)

@@ -21,4 +21,13 @@ namespace SchoolRowingApp.Application.Membership.Dto
         public MembershipPeriodDto(MembershipPeriod membershipPeriod)
             : this(membershipPeriod.Month, membershipPeriod.Year, membershipPeriod.BaseFee) { }
     }
+    /// <summary>
+    /// <see cref="SchoolRowingApp.Application.Membership.Dto.MembershipPeriodDto"/>
+    /// <see cref="SchoolRowingApp.Domain.Membership.AthleteMembership"/>
+    /// </summary>
+    public record AthleteMembershipDto(int MembershipPeriodMonth, int MembershipPeriodYear, decimal ParticipationCoefficient)
+    {
+        public AthleteMembershipDto(SchoolRowingApp.Domain.Membership.AthleteMembership athleteMembership)
+            : this(athleteMembership.MembershipPeriodMonth, athleteMembership.MembershipPeriodYear, athleteMembership.ParticipationCoefficient) { }
+    }
 }
