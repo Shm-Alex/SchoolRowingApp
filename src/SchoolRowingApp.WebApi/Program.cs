@@ -40,7 +40,7 @@ builder.Services.AddMediatR(cfg =>
 
 
 var app = builder.Build();
-// Применение миграций и инициализация данных
+
 // Применение миграций и инициализация данных
 using (var scope = app.Services.CreateScope())
 {
@@ -64,35 +64,27 @@ using (var scope = app.Services.CreateScope())
         }
         else
         {
-            // Проверяем, существует ли таблица MembershipPeriods
-            bool membershipTablesExist = context.Database
-                .SqlQueryRaw<bool>("SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_schema = 'bob' AND table_name = 'MembershipPeriods')")
-                .AsEnumerable()
-                .FirstOrDefault();
-
-            if (!membershipTablesExist)
-            {
-                logger.LogWarning("Обнаружены неполные миграции. Таблицы MembershipPeriods и AthleteMemberships отсутствуют.");
-
-                // Принудительно применяем миграции
                 logger.LogInformation("Применяем недостающие миграции...");
 
                 // Получаем все миграции из сборки
                 var appliedMigrations = context.Database.GetAppliedMigrations().ToList();
                 var allMigrations = context.Database.GetMigrations().ToList();
-
                 // Находим недостающие миграции
                 var pendingMigrations = allMigrations.Except(appliedMigrations).ToList();
+                var migrationsToRollback = appliedMigrations.Except(allMigrations).ToList();
+                var migrationsToAppy = pendingMigrations.Any() ?
+                    pendingMigrations :
+                    migrationsToRollback.OrderByDescending(m => m).ToList();
 
-                if (pendingMigrations.Any())
+                if (migrationsToAppy.Any())
                 {
-                    logger.LogInformation("Найдено {Count} непримененных миграций", pendingMigrations.Count);
+                    logger.LogInformation("Найдено {Count} непримененных миграций", migrationsToAppy.Count);
 
                     // Используем IMigrator для применения конкретных миграций
                     var migrator = context.GetService<IMigrator>();
 
                     // Применяем только недостающие миграции
-                    foreach (var migration in pendingMigrations)
+                    foreach (var migration in migrationsToAppy)
                     {
                         logger.LogInformation("Применение миграции: {Migration}", migration);
                         migrator.Migrate(migration);
@@ -111,7 +103,7 @@ using (var scope = app.Services.CreateScope())
                     // Создаем заново
                     context.Database.Migrate();
                 }
-            }
+            //}
         }
 
         // Теперь инициализируем данные

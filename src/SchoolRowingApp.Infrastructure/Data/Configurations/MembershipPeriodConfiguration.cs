@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SchoolRowingApp.Domain.Membership;
 
+
 namespace SchoolRowingApp.Infrastructure.Data.Configurations;
 
 /// <summary>
@@ -13,10 +14,17 @@ public class MembershipPeriodConfiguration : IEntityTypeConfiguration<Membership
 {
     public void Configure(EntityTypeBuilder<MembershipPeriod> builder)
     {
-        builder.ToTable("MembershipPeriods", "bob");
+        builder.ToTable("MembershipPeriods", "bob", table =>
+        {
+            table.HasCheckConstraint("CK_Month", "Month >= 1 AND Month <= 12");
+            table.HasCheckConstraint("CK_Year", "Year >= 2020 AND Year <= 2100");
+            table.HasCheckConstraint("CK_BaseFee", "BaseFee >= 0");
+        });
 
-        builder.HasKey(mp => mp.Id);
+        // Устанавливаем составной первичный ключ
+        builder.HasKey(mp => new { mp.Year, mp.Month });
 
+        // Остальные настройки свойств
         builder.Property(mp => mp.Month)
                .IsRequired();
 
@@ -24,28 +32,15 @@ public class MembershipPeriodConfiguration : IEntityTypeConfiguration<Membership
                .IsRequired();
 
         builder.Property(mp => mp.BaseFee)
-               .HasColumnType("decimal(10,2)")
-               .IsRequired();
+               .IsRequired()
+               .HasColumnType("decimal(10,2)");
 
-        // Уникальный индекс для предотвращения дубликатов периодов
-        builder.HasIndex(mp => new { mp.Year, mp.Month })
-               .IsUnique();
-
-        // Настройка отношения к AthleteMembership
-
-        //builder.Metadata.FindNavigation(nameof(MembershipPeriod.AthleteMemberships))
-        //    ?.SetPropertyAccessMode(PropertyAccessMode.Field);
-
-        //// Или через HasMany с явным указанием поля
-        //builder.HasMany(typeof(AthleteMembership), "_athleteMembershipsCollection")
-        //       .WithOne()
-        //       .HasForeignKey("MembershipPeriodId")
-        //       .OnDelete(DeleteBehavior.Cascade);
-
+        // Настройка отношения "один ко многим" с AthleteMembership
         builder
-            .HasMany(am=>am.AthleteMemberships)
-            .WithOne(am=>am.MembershipPeriod)
-            .HasForeignKey(am=>am.MembershipPeriodId);
-
+            .HasMany(mp => mp.AthleteMemberships)
+            .WithOne(am => am.MembershipPeriod)
+            .HasForeignKey(am => new { am.MembershipPeriodYear, am.MembershipPeriodMonth })
+            .HasPrincipalKey(mp => new { mp.Year, mp.Month })
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

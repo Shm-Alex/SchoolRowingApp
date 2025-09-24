@@ -1,5 +1,6 @@
 ﻿// Domain/Membership/MembershipPeriod.cs
 using SchoolRowingApp.Domain.SharedKernel;
+using System.ComponentModel.DataAnnotations;
 
 namespace SchoolRowingApp.Domain.Membership;
 
@@ -7,13 +8,14 @@ namespace SchoolRowingApp.Domain.Membership;
 /// Календарь  с записями о базовом взносе. месяц - год- величина базового взноса в этом месяце 
 /// Служит основой для расчета ежемесячных платежей атлетов.
 /// </summary>
-public class MembershipPeriod : Entity
+public class MembershipPeriod : CompositeKeyEntity
 {
+    [Key]
     /// <summary>
     /// Месяц (1-12), для которого устанавливается базовый взнос.
     /// </summary>
     public int Month { get; private set; }
-
+    [Key]
     /// <summary>
     /// Год, для которого устанавливается базовый взнос.
     /// </summary>

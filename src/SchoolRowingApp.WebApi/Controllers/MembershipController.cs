@@ -113,13 +113,16 @@ public class MembershipController : ControllerBase
     /// Используется при удалении записи через UI (например, при ошибке ввода).
     /// </summary>
     /// <param name="athleteId">ID атлета</param>
-    /// <param name="periodId">ID периода членства</param>
+    /// <param name="membershipPeriodMonth"> Месяц периода  членства</param>
+    /// <param name="membershipPeriodYear"> Год периода  членства</param>
+
     [HttpDelete("athletes/{athleteId}/membership/{periodId}")]
     public async Task<IActionResult> RemoveMembership(
         Guid athleteId,
-        Guid periodId)
+        int membershipPeriodMonth,
+        int membershipPeriodYear)
     {
-        await _mediator.Send(new RemoveAthleteMembershipCommand(athleteId, periodId));
+        await _mediator.Send(new RemoveAthleteMembershipCommand(athleteId,membershipPeriodMonth,membershipPeriodYear));
         return NoContent();
     }
     /// <summary>

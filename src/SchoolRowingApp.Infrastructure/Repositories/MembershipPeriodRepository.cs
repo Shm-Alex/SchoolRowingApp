@@ -15,12 +15,7 @@ public class MembershipPeriodRepository : IMembershipPeriodRepository
         _context = context;
     }
 
-    public async Task<MembershipPeriod> GetByIdAsync(Guid id, CancellationToken ct)
-    {
-        return await _context.MembershipPeriods
-            .AsNoTracking()
-            .FirstOrDefaultAsync(p => p.Id == id, ct);
-    }
+
 
     public async Task<MembershipPeriod> GetByYearAndMonthAsync(int year, int month, CancellationToken ct)
     {

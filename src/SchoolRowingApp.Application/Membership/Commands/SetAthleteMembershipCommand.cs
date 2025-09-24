@@ -12,7 +12,8 @@ namespace SchoolRowingApp.Application.Membership.Commands;
 /// </summary>
 public record SetAthleteMembershipCommand(
     Guid AthleteId,
-    Guid MembershipPeriodId,
+    int MembershipPeriodMonth,
+    int MembershipPeriodYear,
     decimal ParticipationCoefficient) : IRequest;
 
 /// <summary>
@@ -44,11 +45,11 @@ public class SetAthleteMembershipCommandHandler :
         if (athlete == null)
             throw new Exception("Атлет не найден");
 
-        var period = await _membershipPeriodRepository.GetByIdAsync(request.MembershipPeriodId, ct);
+        var period = await _membershipPeriodRepository.GetByYearAndMonthAsync(request.MembershipPeriodMonth, request.MembershipPeriodYear, ct);
         if (period == null)
             throw new Exception("Период членства не найден");
 
-        athlete.SetMembership(request.MembershipPeriodId, request.ParticipationCoefficient);
+        athlete.SetMembership(request.MembershipPeriodMonth, request.MembershipPeriodYear, request.ParticipationCoefficient);
 
         await _athleteRepository.UpdateAsync(athlete, ct);
         await _unitOfWork.SaveChangesAsync(ct);

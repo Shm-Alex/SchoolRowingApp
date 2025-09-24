@@ -30,12 +30,12 @@ public class AthleteMembershipRepository : IAthleteMembershipRepository
             .ToListAsync(ct);
     }
 
-    public async Task<List<AthleteMembership>> GetByPeriodIdAsync(Guid periodId, CancellationToken ct)
+    public async Task<List<AthleteMembership>> GetByPeriodAsync( int membershipPeriodMonth, int membershipPeriodYear, CancellationToken ct)
     {
         return await _context.AthleteMemberships
             .AsNoTracking()
             .Include(am => am.Athlete)
-            .Where(am => am.MembershipPeriodId == periodId)
+            .Where(am => (am.MembershipPeriodMonth == membershipPeriodMonth)&& (am.MembershipPeriodYear == membershipPeriodYear))
             .ToListAsync(ct);
     }
 

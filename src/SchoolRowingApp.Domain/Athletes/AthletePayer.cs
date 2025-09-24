@@ -3,7 +3,7 @@ using SchoolRowingApp.Domain.Payments;
 
 namespace SchoolRowingApp.Domain.Athletes;
 
-public class AthletePayer : Entity
+public class AthletePayer : GuidEntity
 {
     public Guid AthleteId { get; private set; }
     public Guid PayerId { get; private set; }

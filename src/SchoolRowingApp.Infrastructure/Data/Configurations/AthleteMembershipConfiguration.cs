@@ -1,6 +1,7 @@
 ﻿// Infrastructure/Data/Configurations/AthleteMembershipConfiguration.cs
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using SchoolRowingApp.Domain.Athletes;
 using SchoolRowingApp.Domain.Membership;
 
 namespace SchoolRowingApp.Infrastructure.Data.Configurations;
@@ -15,26 +16,26 @@ public class AthleteMembershipConfiguration : IEntityTypeConfiguration<AthleteMe
     {
         builder.ToTable("AthleteMemberships", "bob");
 
-        // Составной первичный ключ: AthleteId + MembershipPeriodId
-        builder.HasKey(am => new { am.AthleteId, am.MembershipPeriodId });
+        // Составной первичный ключ: AthleteId + MembershipPeriod
+        builder.HasKey(am => new { am.AthleteId, am.MembershipPeriodYear, am.MembershipPeriodMonth });
 
-        builder.Property(am => am.ParticipationCoefficient)
-               .HasColumnType("decimal(3,1)")
-               .IsRequired();
+        // Составной внешний ключ на MembershipPeriod
+        builder.HasOne(am => am.MembershipPeriod)
+               .WithMany(mp => mp.AthleteMemberships)
+               .HasForeignKey(am => new { am.MembershipPeriodYear, am.MembershipPeriodMonth })
+               .HasPrincipalKey(mp => new { mp.Year, mp.Month })
+               .OnDelete(DeleteBehavior.Cascade);
 
-        // Настройка отношения к Athlete
-       builder.HasOne(am => am.Athlete)
-               .WithMany(mp=>mp.AthleteMemberships) 
-               .HasForeignKey(am => am.AthleteId)
+        // Внешний ключ на Athlete
+        builder.HasOne(am => am.Athlete)
+               .WithMany()
+               .HasForeignKey(nameof(AthleteMembership.AthleteId))
                .HasPrincipalKey(a => a.Id)
                .OnDelete(DeleteBehavior.Cascade);
 
-
-        // Настройка отношения к MembershipPeriod
-        builder.HasOne(am => am.MembershipPeriod)
-               .WithMany(mp => mp.AthleteMemberships)
-               .HasForeignKey(am => am.MembershipPeriodId)
-               .HasPrincipalKey(mp => mp.Id)
-               .OnDelete(DeleteBehavior.Cascade);
+        // Ограничение на коэффициент участия
+        builder.Property(am => am.ParticipationCoefficient)
+               .HasColumnType("decimal(3,1)")
+               .IsRequired();
     }
 }

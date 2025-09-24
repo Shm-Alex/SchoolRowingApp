@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace SchoolRowingApp.Domain.Athletes;
 
-public class Athlete : Entity
+public class Athlete : GuidEntity
 {
     public string FirstName { get; private set; }
     public string SecondName { get; private set; }
@@ -94,11 +94,12 @@ public class Athlete : Entity
     /// <param name="membershipPeriodId">ID периода членства</param>
     /// <param name="participationCoefficient">Коэффициент участия (0, 0.5, 1)</param>
     /// <exception cref="DomainException">Выбрасывается, если коэффициент недопустим</exception>
-    public void SetMembership(Guid membershipPeriodId, decimal participationCoefficient)
+    public void SetMembership(int membershipPeriodMonth, int membershipPeriodYear, decimal participationCoefficient)
     {
+        ;
         // Проверяем, существует ли уже запись для этого периода
         var existingMembership = _athleteMemberships
-            .FirstOrDefault(m => m.MembershipPeriodId == membershipPeriodId);
+            .FirstOrDefault(m => (m.MembershipPeriodMonth == membershipPeriodMonth)&& (m.MembershipPeriodYear == membershipPeriodYear) );
 
         if (existingMembership != null)
         {
@@ -108,7 +109,7 @@ public class Athlete : Entity
         else
         {
             // Создаем новую запись
-            var membership = new AthleteMembership(Id, membershipPeriodId, participationCoefficient);
+            var membership = new AthleteMembership(Id, membershipPeriodMonth, membershipPeriodYear, participationCoefficient);
             _athleteMemberships.Add(membership);
             UpdateLastModified();
         }
@@ -119,10 +120,10 @@ public class Athlete : Entity
     /// Используется при удалении записи о членстве (например, при ошибке ввода).
     /// </summary>
     /// <param name="membershipPeriodId">ID периода членства</param>
-    public void RemoveMembership(Guid membershipPeriodId)
+    public void RemoveMembership(int membershipPeriodMonth, int membershipPeriodYear)
     {
         var membership = _athleteMemberships
-            .FirstOrDefault(m => m.MembershipPeriodId == membershipPeriodId);
+            .FirstOrDefault(m => (m.MembershipPeriodMonth == membershipPeriodMonth) && (m.MembershipPeriodYear == membershipPeriodYear));
 
         if (membership != null)
         {
@@ -137,10 +138,10 @@ public class Athlete : Entity
     /// </summary>
     /// <param name="membershipPeriodId">ID периода членства</param>
     /// <returns>Коэффициент участия или null, если запись отсутствует</returns>
-    public decimal? GetParticipationCoefficient(Guid membershipPeriodId)
+    public decimal? GetParticipationCoefficient( int membershipPeriodMonth, int membershipPeriodYear)
     {
         var membership = _athleteMemberships
-            .FirstOrDefault(m => m.MembershipPeriodId == membershipPeriodId);
+            .FirstOrDefault(m => (m.MembershipPeriodMonth == membershipPeriodMonth) &&(m.MembershipPeriodYear == membershipPeriodYear));
 
         return membership?.ParticipationCoefficient;
     }
@@ -151,10 +152,10 @@ public class Athlete : Entity
     /// </summary>
     /// <param name="membershipPeriod">Период членства</param>
     /// <returns>Сумма взноса в рублях</returns>
-    public decimal CalculateFee(MembershipPeriod membershipPeriod)
+    public decimal CalculateFee(int membershipPeriodMonth, int membershipPeriodYear)
     {
         var membership = _athleteMemberships
-            .FirstOrDefault(m => m.MembershipPeriodId == membershipPeriod.Id);
+            .FirstOrDefault(m => (m.MembershipPeriodMonth == membershipPeriodMonth) && (m.MembershipPeriodYear == membershipPeriodYear));
 
         return membership != null ? membership.CalculateFee() : 0;
     }

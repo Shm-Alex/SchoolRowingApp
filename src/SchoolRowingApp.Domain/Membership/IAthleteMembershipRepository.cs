@@ -32,10 +32,9 @@ public interface IAthleteMembershipRepository
     /// Получает все записи о членстве для указанного периода.
     /// Используется для отображения таблицы членства по месяцам в UI.
     /// </summary>
-    /// <param name="periodId">ID периода членства</param>
     /// <param name="ct">Токен отмены</param>
     /// <returns>Список записей о членстве в указанный период</returns>
-    Task<List<AthleteMembership>> GetByPeriodIdAsync(Guid periodId, CancellationToken ct);
+    Task<List<AthleteMembership>> GetByPeriodAsync(int membershipPeriodMonth, int membershipPeriodYear, CancellationToken ct);
 
     /// <summary>
     /// Добавляет запись о членстве.

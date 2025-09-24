@@ -66,7 +66,7 @@ public class UnitOfWork : IUnitOfWork, IDisposable
     private async Task DispatchDomainEvents()
     {
         var entities = _context.ChangeTracker
-            .Entries<Entity>()
+            .Entries<GuidEntity>()
             .Where(e => e.Entity.DomainEvents.Any())
             .Select(e => e.Entity)
             .ToList();

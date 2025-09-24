@@ -8,8 +8,7 @@ namespace SchoolRowingApp.Application.Membership.Commands;
 /// Команда для удаления членства атлета на указанный период
 /// </summary>
 public record RemoveAthleteMembershipCommand(
-Guid AthleteId,
-Guid MembershipPeriodId) : IRequest;
+Guid AthleteId, int MembershipPeriodMonth, int MembershipPeriodYear) : IRequest;
 
 /// <summary>
 /// Обработчик команды удаления членства атлета
@@ -36,7 +35,7 @@ IRequestHandler<RemoveAthleteMembershipCommand>
         if (athlete == null)
             throw new Exception("Атлет не найден");
 
-        athlete.RemoveMembership(request.MembershipPeriodId);
+        athlete.RemoveMembership(request.MembershipPeriodMonth, request.MembershipPeriodYear);
 
         await _athleteRepository.UpdateAsync(athlete, ct);
         await _unitOfWork.SaveChangesAsync(ct);

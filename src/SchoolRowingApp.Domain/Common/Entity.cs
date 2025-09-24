@@ -1,36 +1,14 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace SchoolRowingApp.Domain.Common;
 
-public abstract class Entity
+/// <summary>
+/// Базовый класс для сущностей с единичным первичным ключом.
+/// Позволяет использовать разные типы ключей (Guid, int и т.д.).
+/// </summary>
+/// <typeparam name="TId">Тип первичного ключа</typeparam>
+public abstract class Entity<TId> : AuditableEntity
 {
-	// This can easily be modified to be BaseEntity<T> and public T Id to support different key types.
-	// Using non-generic integer types for simplicity
-	[Key]
-	public Guid Id { get; set; } = Guid.NewGuid();
-
-	public DateTime Created { get; set; } = DateTime.UtcNow;
-	public DateTime? LastModified { get; set; }
-
-	private readonly List<BaseEvent> _domainEvents = new();
-
-    [NotMapped]
-    public IReadOnlyCollection<BaseEvent> DomainEvents => _domainEvents.AsReadOnly();
-
-    public void AddDomainEvent(BaseEvent domainEvent)
-    {
-        _domainEvents.Add(domainEvent);
-    }
-
-    public void RemoveDomainEvent(BaseEvent domainEvent)
-    {
-        _domainEvents.Remove(domainEvent);
-    }
-
-    public void ClearDomainEvents()
-    {
-        _domainEvents.Clear();
-    }
+    [Key]
+    public TId Id { get; protected set; }
 }

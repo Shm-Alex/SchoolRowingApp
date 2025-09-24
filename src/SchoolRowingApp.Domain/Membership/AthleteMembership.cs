@@ -9,17 +9,16 @@ namespace SchoolRowingApp.Domain.Membership;
 /// Членство атлета в школе на определенный период (месяц).
 /// Определяет коэффициент участия атлета и используется для расчета взноса.
 /// </summary>
-public class AthleteMembership : Entity
+public class AthleteMembership : GuidEntity
 {
     /// <summary>
     /// ID атлета, который является членом школы.
     /// </summary>
     public Guid AthleteId { get; private set; }
 
-    /// <summary>
-    /// ID периода членства (месяц и год).
-    /// </summary>
-    public Guid MembershipPeriodId { get; private set; }
+    
+    public int MembershipPeriodMonth { get; private set; }
+    public int MembershipPeriodYear { get; private set; }
 
     /// <summary>
     /// Коэффициент участия (0, 0.5, 1).
@@ -50,14 +49,18 @@ public class AthleteMembership : Entity
     /// <param name="participationCoefficient">Коэффициент участия (0, 0.5, 1)</param>
     /// <exception cref="DomainException">Выбрасывается, если коэффициент участия недопустим</exception>
     public AthleteMembership(
-        Guid athleteId,
-        Guid membershipPeriodId,
-        decimal participationCoefficient)
+       Guid athleteId,
+       int membershipPeriodMonth,
+       int membershipPeriodYear,
+       decimal participationCoefficient)
     {
-        ValidateParticipationCoefficient(participationCoefficient);
+        // Валидация коэффициента участия
+        if (participationCoefficient < 0 || participationCoefficient > 1)
+            throw new DomainException("Коэффициент участия должен быть в диапазоне от 0 до 1");
 
         AthleteId = athleteId;
-        MembershipPeriodId = membershipPeriodId;
+        MembershipPeriodMonth = membershipPeriodMonth;
+        MembershipPeriodYear = membershipPeriodYear;
         ParticipationCoefficient = participationCoefficient;
     }
 

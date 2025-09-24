@@ -3,7 +3,7 @@ using SchoolRowingApp.Domain.SharedKernel;
 
 namespace SchoolRowingApp.Domain.Payments;
 
-public class Payer : Entity
+public class Payer : GuidEntity
 {
     public string FirstName { get; private set; }
     public string SecondName { get; private set; }

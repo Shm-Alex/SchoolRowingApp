@@ -9,13 +9,7 @@ namespace SchoolRowingApp.Domain.Membership;
 /// </summary>
 public interface IMembershipPeriodRepository
 {
-    /// <summary>
-    /// Получает период членства по ID.
-    /// </summary>
-    /// <param name="id">ID периода</param>
-    /// <param name="ct">Токен отмены</param>
-    /// <returns>Период членства или null, если не найден</returns>
-    Task<MembershipPeriod> GetByIdAsync(Guid id, CancellationToken ct);
+
 
     /// <summary>
     /// Получает период членства по году и месяцу.
