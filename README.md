@@ -152,7 +152,12 @@ CREATE DATABASE bobdb;
 CREATE USER bob WITH PASSWORD 'bob';
 GRANT ALL PRIVILEGES ON DATABASE bobdb TO bob;
 ```
-
+* очистка схемы bob с нуля
+```
+DROP SCHEMA IF EXISTS bob CASCADE;
+CREATE SCHEMA bob;
+GRANT ALL PRIVILEGES ON SCHEMA bob TO bob;
+```
 2. Настройте строку подключения в `appsettings.Local.json`:
 ```json
 {
