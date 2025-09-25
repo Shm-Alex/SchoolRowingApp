@@ -47,7 +47,7 @@ public class DatabaseSeeder
 
         using var scope = _serviceProvider.CreateScope();
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-        var seedMembershipPeriodAsync = SeedMembershipPeriodAsync(mediator, cancellationToken);
+        var seedMembershipPeriodAsync = await SeedMembershipPeriodAsync(mediator, cancellationToken);
         var seededCount=await SeedAthletesAsync(mediator, cancellationToken);
         _logger.LogInformation($"Добавлено {seededCount} атлетов");
     }

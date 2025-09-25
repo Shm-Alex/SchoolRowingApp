@@ -106,11 +106,12 @@ public class CreateAthleteWithPayersCommandHandler :
 
     private async Task ProcessMembershipPeriodForAthleteAsync(Athlete athlete, AthleteMembershipDto athleteMembershipDto, CancellationToken ct)
     {
-        //var _membershipPeriod = await _membershipPeriodRepository
-        //    .GetByYearAndMonthAsync(athleteMembershipDto.MembershipPeriodYear, athleteMembershipDto.MembershipPeriodMonth, ct);
-        //if (_membershipPeriod == null) {
-        //    throw new DomainException("Необходимо сначала добавить   в бд информацию о базовых взносах в SeedMembershipPeriodAsync");
-        //}
+        var _membershipPeriod = await _membershipPeriodRepository
+            .GetByYearAndMonthAsync(athleteMembershipDto.MembershipPeriodYear, athleteMembershipDto.MembershipPeriodMonth, ct);
+        if (_membershipPeriod == null)
+        {
+            throw new DomainException("Необходимо сначала добавить   в бд информацию о базовых взносах в SeedMembershipPeriodAsync");
+        }
 
         athlete.SetMembership
             (athleteMembershipDto.MembershipPeriodMonth,
