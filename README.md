@@ -139,10 +139,10 @@ SchoolRowingApp/
 ```
 ```mermaid
 flowchart TD
-SchoolRowingApp.Application-->|зависит от |SchoolRowingApp.Domain
-SchoolRowingApp.Infrastructure--|зависит от |>SchoolRowingApp.Application
-SchoolRowingApp.WebApi-->|зависит от |SchoolRowingApp.Application
-SchoolRowingApp.WebApi-->|зависит от |SchoolRowingApp.Infrastructure
+A(SchoolRowingApp.Application)-->|зависит от |D(SchoolRowingApp.Domain)
+I(SchoolRowingApp.Infrastructure)-->|зависит от |A(SchoolRowingApp.Application)
+WA(SchoolRowingApp.WebApi)-->|зависит от |A(SchoolRowingApp.Application)
+WA(SchoolRowingApp.WebApi)-->|зависит от |I(SchoolRowingApp.Infrastructure)
 
 ```
 
