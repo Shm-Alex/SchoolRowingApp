@@ -137,6 +137,14 @@ SchoolRowingApp/
 ├── README.md
 └── SchoolRowingApp.sln                   # Решение Visual Studio
 ```
+```mermaid
+flowchart TD
+SchoolRowingApp.Application-->|зависит от |SchoolRowingApp.Domain
+SchoolRowingApp.Infrastructure--|зависит от |>SchoolRowingApp.Application
+SchoolRowingApp.WebApi-->|зависит от |SchoolRowingApp.Application
+SchoolRowingApp.WebApi-->|зависит от |SchoolRowingApp.Infrastructure
+
+```
 
 ## 🛠️ Как запустить проект
 
