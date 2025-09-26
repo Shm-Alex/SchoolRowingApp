@@ -8,7 +8,9 @@ namespace SchoolRowingApp.Domain.Common;
 /// </summary>
 /// <typeparam name="TId">Тип первичного ключа</typeparam>
 public abstract class Entity<TId> : AuditableEntity
+ 
 {
     [Key]
     public TId Id { get; protected set; }
+ 
 }

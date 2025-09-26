@@ -8,6 +8,7 @@ namespace SchoolRowingApp.Domain.Common;
 /// </summary>
 public abstract class AuditableEntity
 {
+    public virtual void UpdateLastModified() { LastModified = DateTime.UtcNow; }
     public DateTime Created { get; set; } = DateTime.UtcNow;
     public DateTime? LastModified { get; set; }
 

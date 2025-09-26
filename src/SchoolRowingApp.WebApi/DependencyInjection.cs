@@ -57,6 +57,7 @@ public static class DependencyInjection
 
             // Включаем аннотации для отображения комментариев к свойствам
             options.EnableAnnotations();
+
 #if (UseApiOnly)
             // Добавляем JWT Bearer авторизацию
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
